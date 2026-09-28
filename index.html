@@ -1,1 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <meta name="theme-color" content="#050505">
+  <meta name="description" content="GODDEN TECH GLOBAL — Premium technology and gadgets.">
+
+  <title>GODDEN TECH GLOBAL | V2</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- LOADING SCREEN -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loader-logo">G</div>
+    <h2>GODDEN TECH</h2>
+    <p>GLOBAL</p>
+    <div class="loader"></div>
+  </div>
+
+
+  <!-- AUTHENTICATION SCREEN -->
+  <main id="authScreen" class="auth-screen hidden">
+
+    <div class="brand">
+      <div class="brand-logo">G</div>
+      <h1>GODDEN TECH</h1>
+      <span>GLOBAL</span>
+    </div>
+
+    <div class="auth-card">
+
+      <div class="auth-heading">
+        <p class="eyebrow">WELCOME</p>
+        <h2 id="authTitle">Create your account</h2>
+        <p id="authSubtitle">
+          Register to access GODDEN TECH GLOBAL.
+        </p>
+      </div>
+
+
+      <!-- REGISTER -->
+      <form id="registerForm">
+
+        <div class="input-group">
+          <label for="registerName">Full Name</label>
+          <input
+            id="registerName"
+            type="text"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            required
+          >
+        </div>
+
+        <div class="input-group">
+          <label for="registerEmail">Email</label>
+          <input
+            id="registerEmail"
+            type="email"
+            placeholder="Enter your email"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="input-group">
+          <label for="registerPassword">Password</label>
+          <input
+            id="registerPassword"
+            type="password"
+            placeholder="Create a password"
+            autocomplete="new-password"
+            minlength="6"
+            required
+          >
+        </div>
+
+        <button type="submit" class="primary-btn">
+          Create Account
+        </button>
+
+      </form>
+
+
+      <!-- LOGIN -->
+      <form id="loginForm" class="hidden">
+
+        <div class="input-group">
+          <label for="loginEmail">Email</label>
+          <input
+            id="loginEmail"
+            type="email"
+            placeholder="Enter your email"
+            autocomplete="email"
+            required
+          >
+        </div>
+
+        <div class="input-group">
+          <label for="loginPassword">Password</label>
+          <input
+            id="loginPassword"
+            type="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <button type="submit" class="primary-btn">
+          Login
+        </button>
+
+      </form>
+
+
+      <div id="authMessage" class="auth-message"></div>
+
+
+      <div class="switch-auth">
+        <span id="switchText">Already have an account?</span>
+        <button id="switchAuthBtn" type="button">
+          Login
+        </button>
+      </div>
+
+    </div>
+
+    <p class="copyright">
+      © 2026 GODDEN TECH GLOBAL
+    </p>
+
+  </main>
+
+
+  <!-- STORE SCREEN -->
+  <main id="storeScreen" class="store-screen hidden">
+
+    <header class="navbar">
+
+      <div class="nav-brand">
+        <div class="small-logo">G</div>
+        <div>
+          <strong>GODDEN TECH</strong>
+          <span>GLOBAL</span>
+        </div>
+      </div>
+
+      <button id="logoutBtn" class="logout-btn">
+        Logout
+      </button>
+
+    </header>
+
+
+    <section class="hero">
+
+      <div class="hero-content">
+
+        <p class="eyebrow">PREMIUM TECHNOLOGY</p>
+
+        <h1>
+          Technology made
+          <span>better.</span>
+        </h1>
+
+        <p>
+          Discover premium gadgets, smartphones, laptops,
+          gaming products and more.
+        </p>
+
+        <button id="shopBtn" class="primary-btn hero-btn">
+          Explore Products
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <section class="welcome-section">
+
+      <p class="eyebrow">YOUR ACCOUNT</p>
+
+      <h2 id="welcomeUser">
+        Welcome to GODDEN TECH.
+      </h2>
+
+      <p>
+        Your premium technology store is ready.
+      </p>
+
+    </section>
+
+
+    <section class="products-section">
+
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">FEATURED</p>
+          <h2>Popular Products</h2>
+        </div>
+      </div>
+
+      <div class="products-grid">
+
+        <article class="product-card">
+          <div class="product-icon">📱</div>
+          <h3>Smartphones</h3>
+          <p>Discover the latest smartphones.</p>
+        </article>
+
+        <article class="product-card">
+          <div class="product-icon">💻</div>
+          <h3>Laptops</h3>
+          <p>Powerful devices for work and play.</p>
+        </article>
+
+        <article class="product-card">
+          <div class="product-icon">🎧</div>
+          <h3>Audio</h3>
+          <p>Premium headphones and accessories.</p>
+        </article>
+
+        <article class="product-card">
+          <div class="product-icon">🎮</div>
+          <h3>Gaming</h3>
+          <p>Upgrade your gaming experience.</p>
+        </article>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- APK DOWNLOAD POPUP -->
+  <div id="apkPopup" class="popup-overlay hidden">
+
+    <div class="popup-card">
+
+      <button id="closePopup" class="close-popup">
+        ×
+      </button>
+
+      <div class="popup-icon">
+        📲
+      </div>
+
+      <p class="eyebrow">GODDEN TECH APP</p>
+
+      <h2>Get the GODDEN TECH App</h2>
+
+      <p>
+        For the full GODDEN TECH experience,
+        download our official mobile app.
+      </p>
+
+      <button id="downloadAppBtn" class="primary-btn">
+        Download APK
+      </button>
+
+      <button id="continueWebBtn" class="secondary-btn">
+        Continue on Website
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <script src="script.js"></script>
+
+</body>
+    </html>
