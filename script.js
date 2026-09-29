@@ -1131,7 +1131,239 @@ function closeProductModal() {
 
 }
 
-
 /* =====================================================
    CHECKOUT
-===========================================
+===================================================== */
+
+function checkout() {
+
+  if (!cart.length) {
+    showToast("Your cart is empty.");
+    return;
+  }
+
+  const total = cart.reduce(
+    (sum, item) => sum + (item.price * item.quantity),
+    0
+  );
+
+  const order = {
+    id: Date.now(),
+    date: new Date().toLocaleString(),
+    total: total,
+    items: cart.map(item => ({
+      name: item.name,
+      quantity: item.quantity,
+      price: item.price
+    }))
+  };
+
+  orders.unshift(order);
+  saveOrders();
+
+  const message =
+    `Hello GODDEN TECH GLOBAL.%0A%0A` +
+    `I want to place an order:%0A%0A` +
+    cart.map(item =>
+      `${item.name} x${item.quantity} - ${money(item.price * item.quantity)}`
+    ).join("%0A") +
+    `%0A%0ATotal: ${money(total)}`;
+
+  window.open(
+    `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`,
+    "_blank"
+  );
+
+  cart = [];
+  saveCart();
+  updateCart();
+
+  closeCart();
+
+  showToast("Order created successfully!");
+}
+
+
+/* =====================================================
+   APP DOWNLOAD
+===================================================== */
+
+function downloadApp() {
+
+  if (APP_URL && APP_URL !== "#") {
+
+    window.open(APP_URL, "_blank");
+
+    return;
+  }
+
+  showToast(
+    "The GODDEN TECH app will be available soon."
+  );
+}
+
+
+function closeAppPopup() {
+
+  const popup =
+    document.getElementById("appPopup");
+
+  if (popup) {
+    popup.classList.add("hidden");
+  }
+
+}
+
+
+/* =====================================================
+   SUPPORT
+===================================================== */
+
+function contactSupport() {
+
+  const message =
+    "Hello GODDEN TECH GLOBAL, I need help.";
+
+  window.open(
+    `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,
+    "_blank"
+  );
+
+}
+
+
+/* =====================================================
+   MOBILE MENU
+===================================================== */
+
+function toggleMenu() {
+
+  const nav =
+    document.querySelector(".category-nav");
+
+  if (!nav) return;
+
+  nav.classList.toggle("mobile-open");
+
+}
+
+
+/* =====================================================
+   COUNTDOWN
+===================================================== */
+
+let dealEnd =
+  Date.now() + (24 * 60 * 60 * 1000);
+
+
+function updateCountdown() {
+
+  let difference =
+    dealEnd - Date.now();
+
+  if (difference <= 0) {
+
+    dealEnd =
+      Date.now() + (24 * 60 * 60 * 1000);
+
+    difference =
+      dealEnd - Date.now();
+  }
+
+  const hours =
+    Math.floor(
+      difference / (1000 * 60 * 60)
+    );
+
+  const minutes =
+    Math.floor(
+      (difference / (1000 * 60)) % 60
+    );
+
+  const seconds =
+    Math.floor(
+      (difference / 1000) % 60
+    );
+
+  const hoursElement =
+    document.getElementById("hours");
+
+  const minutesElement =
+    document.getElementById("minutes");
+
+  const secondsElement =
+    document.getElementById("seconds");
+
+  if (hoursElement) {
+    hoursElement.textContent =
+      String(hours).padStart(2, "0");
+  }
+
+  if (minutesElement) {
+    minutesElement.textContent =
+      String(minutes).padStart(2, "0");
+  }
+
+  if (secondsElement) {
+    secondsElement.textContent =
+      String(seconds).padStart(2, "0");
+  }
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function setupSearch() {
+
+  const input =
+    document.getElementById("searchInput");
+
+  if (!input) return;
+
+  input.addEventListener("input", function () {
+
+    visibleProducts = 12;
+
+    renderProducts();
+
+  });
+
+  input.addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+      searchProducts();
+    }
+
+  });
+
+}
+
+
+/* =====================================================
+   START APPLICATION
+===================================================== */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    setupAuth();
+
+    setupSearch();
+
+    updateCountdown();
+
+    setInterval(
+      updateCountdown,
+      1000
+    );
+
+    if (currentUser) {
+      showStore();
+    }
+
+  }
+);
