@@ -1,1259 +1,1294 @@
-"use strict";
-
 /* =========================================================
-   GODDEN TECH GLOBAL V2
-   FRONTEND JAVASCRIPT
+   GODDEN TECH GLOBAL
+   Marketplace Store Engine
 ========================================================= */
 
-/* =========================
-   CONFIGURATION
-========================= */
+
+/* =========================================================
+   SETTINGS
+========================================================= */
 
 const WHATSAPP_NUMBER = "2347068270950";
 
-const BACKEND_URL =
-  "https://godden-tech-backend-production.up.railway.app";
+const APP_URL = "#";
 
-/*
-   The APK does NOT exist yet, so this must remain "#".
-   Replace it later with the real APK download URL.
-*/
-const APP_DOWNLOAD_URL = "#";
+let productsShown = 20;
 
-/* =========================
+let currentFilter = "all";
+
+let cart = JSON.parse(
+  localStorage.getItem("godden_cart") || "[]"
+);
+
+let orders = JSON.parse(
+  localStorage.getItem("godden_orders") || "[]"
+);
+
+let users = JSON.parse(
+  localStorage.getItem("godden_users") || "[]"
+);
+
+let currentUser = JSON.parse(
+  localStorage.getItem("godden_current_user") || "null"
+);
+
+
+/* =========================================================
    PRODUCTS
-========================= */
+========================================================= */
 
 const products = [
 
   {
     id: 1,
-    name: "iPhone 15 Pro",
-    category: "Smartphones",
-    price: 1350000,
-    icon: "📱",
-    description: "Premium Apple smartphone with powerful performance."
+    name: "Premium Smartphone Pro 5G",
+    category: "smartphones",
+    price: 289000,
+    oldPrice: 340000,
+    discount: 15,
+    rating: 4.8,
+    sold: 1240,
+    icon: "📱"
   },
 
   {
     id: 2,
-    name: "Samsung Galaxy S25",
-    category: "Smartphones",
-    price: 1200000,
-    icon: "📱",
-    description: "Modern flagship smartphone with advanced technology."
+    name: "Android Smartphone 256GB",
+    category: "smartphones",
+    price: 185000,
+    oldPrice: 220000,
+    discount: 16,
+    rating: 4.7,
+    sold: 873,
+    icon: "📱"
   },
 
   {
     id: 3,
-    name: "Google Pixel 9 Pro",
-    category: "Smartphones",
-    price: 1100000,
-    icon: "📱",
-    description: "Premium Android phone with an advanced camera system."
+    name: "Budget Android Phone",
+    category: "smartphones",
+    price: 99000,
+    oldPrice: 125000,
+    discount: 21,
+    rating: 4.5,
+    sold: 2140,
+    icon: "📱"
   },
 
   {
     id: 4,
-    name: "MacBook Air M3",
-    category: "Laptops",
-    price: 1850000,
-    icon: "💻",
-    description: "Lightweight Apple laptop with M3 performance."
+    name: "Ultra Camera Smartphone",
+    category: "smartphones",
+    price: 375000,
+    oldPrice: 430000,
+    discount: 13,
+    rating: 4.9,
+    sold: 562,
+    icon: "📱"
   },
 
   {
     id: 5,
-    name: "HP Spectre x360",
-    category: "Laptops",
-    price: 1600000,
-    icon: "💻",
-    description: "Premium convertible laptop for work and creativity."
+    name: "5G Gaming Smartphone",
+    category: "smartphones",
+    price: 315000,
+    oldPrice: 360000,
+    discount: 12,
+    rating: 4.8,
+    sold: 719,
+    icon: "📱"
   },
+
 
   {
     id: 6,
-    name: "ASUS ROG Gaming Laptop",
-    category: "Gaming",
-    price: 2200000,
-    icon: "💻",
-    description: "High-performance gaming laptop built for serious gaming."
+    name: "SlimBook 15 Laptop",
+    category: "laptops",
+    price: 485000,
+    oldPrice: 560000,
+    discount: 13,
+    rating: 4.8,
+    sold: 318,
+    icon: "💻"
   },
 
   {
     id: 7,
-    name: "AirPods Pro",
-    category: "Audio",
-    price: 390000,
-    icon: "🎧",
-    description: "Premium wireless earbuds with active noise cancellation."
+    name: "Business Laptop 8GB RAM",
+    category: "laptops",
+    price: 325000,
+    oldPrice: 390000,
+    discount: 17,
+    rating: 4.6,
+    sold: 481,
+    icon: "💻"
   },
 
   {
     id: 8,
-    name: "Sony WH-1000XM5",
-    category: "Audio",
-    price: 550000,
-    icon: "🎧",
-    description: "Premium noise-cancelling wireless headphones."
+    name: "Gaming Laptop RTX",
+    category: "laptops",
+    price: 895000,
+    oldPrice: 1050000,
+    discount: 15,
+    rating: 4.9,
+    sold: 167,
+    icon: "💻"
   },
 
   {
     id: 9,
-    name: "JBL Charge 5",
-    category: "Audio",
-    price: 250000,
-    icon: "🔊",
-    description: "Portable Bluetooth speaker with powerful sound."
+    name: "Student Laptop 256GB",
+    category: "laptops",
+    price: 285000,
+    oldPrice: 330000,
+    discount: 14,
+    rating: 4.5,
+    sold: 926,
+    icon: "💻"
   },
+
 
   {
     id: 10,
-    name: "PlayStation 5",
-    category: "Gaming",
-    price: 950000,
-    icon: "🎮",
-    description: "Next-generation gaming console."
+    name: "Wireless Noise Cancelling Headphones",
+    category: "audio",
+    price: 58000,
+    oldPrice: 75000,
+    discount: 23,
+    rating: 4.8,
+    sold: 1830,
+    icon: "🎧"
   },
 
   {
     id: 11,
-    name: "Xbox Series X",
-    category: "Gaming",
-    price: 850000,
-    icon: "🎮",
-    description: "Powerful next-generation gaming console."
+    name: "Bluetooth Earbuds Pro",
+    category: "audio",
+    price: 28500,
+    oldPrice: 40000,
+    discount: 29,
+    rating: 4.7,
+    sold: 3421,
+    icon: "🎧"
   },
 
   {
     id: 12,
-    name: "Apple Watch Series 10",
-    category: "Wearables",
-    price: 650000,
-    icon: "⌚",
-    description: "Advanced smartwatch for everyday life."
+    name: "Portable Bluetooth Speaker",
+    category: "audio",
+    price: 32000,
+    oldPrice: 45000,
+    discount: 29,
+    rating: 4.6,
+    sold: 1275,
+    icon: "🔊"
   },
 
   {
     id: 13,
-    name: "Samsung Galaxy Watch",
-    category: "Wearables",
-    price: 450000,
-    icon: "⌚",
-    description: "Smart wearable with health and fitness features."
+    name: "Mini Wireless Earbuds",
+    category: "audio",
+    price: 14500,
+    oldPrice: 22000,
+    discount: 34,
+    rating: 4.4,
+    sold: 5120,
+    icon: "🎧"
   },
+
 
   {
     id: 14,
-    name: "Anker Power Bank",
-    category: "Accessories",
-    price: 120000,
-    icon: "🔋",
-    description: "High-capacity portable charging solution."
+    name: "Wireless Gaming Controller",
+    category: "gaming",
+    price: 45000,
+    oldPrice: 65000,
+    discount: 31,
+    rating: 4.8,
+    sold: 1904,
+    icon: "🎮"
   },
 
   {
     id: 15,
-    name: "65W Fast Charger",
-    category: "Accessories",
-    price: 65000,
-    icon: "🔌",
-    description: "Fast USB-C charger for compatible devices."
+    name: "RGB Gaming Headset",
+    category: "gaming",
+    price: 39000,
+    oldPrice: 55000,
+    discount: 29,
+    rating: 4.7,
+    sold: 841,
+    icon: "🎧"
   },
 
   {
     id: 16,
     name: "Mechanical Gaming Keyboard",
-    category: "Gaming",
-    price: 150000,
-    icon: "⌨️",
-    description: "Responsive mechanical keyboard for gaming."
+    category: "gaming",
+    price: 42000,
+    oldPrice: 60000,
+    discount: 30,
+    rating: 4.8,
+    sold: 724,
+    icon: "⌨️"
+  },
+
+  {
+    id: 17,
+    name: "RGB Gaming Mouse",
+    category: "gaming",
+    price: 18500,
+    oldPrice: 28000,
+    discount: 34,
+    rating: 4.6,
+    sold: 2410,
+    icon: "🖱️"
+  },
+
+
+  {
+    id: 18,
+    name: "Smart Watch Series X",
+    category: "wearables",
+    price: 35000,
+    oldPrice: 50000,
+    discount: 30,
+    rating: 4.7,
+    sold: 1320,
+    icon: "⌚"
+  },
+
+  {
+    id: 19,
+    name: "Fitness Smart Band",
+    category: "wearables",
+    price: 12500,
+    oldPrice: 19000,
+    discount: 34,
+    rating: 4.5,
+    sold: 3750,
+    icon: "⌚"
+  },
+
+  {
+    id: 20,
+    name: "Premium Smart Watch",
+    category: "wearables",
+    price: 68000,
+    oldPrice: 85000,
+    discount: 20,
+    rating: 4.8,
+    sold: 431,
+    icon: "⌚"
+  },
+
+
+  {
+    id: 21,
+    name: "65W Fast Charging Adapter",
+    category: "accessories",
+    price: 14500,
+    oldPrice: 21000,
+    discount: 31,
+    rating: 4.8,
+    sold: 4270,
+    icon: "🔌"
+  },
+
+  {
+    id: 22,
+    name: "USB-C Fast Charging Cable",
+    category: "accessories",
+    price: 6500,
+    oldPrice: 10000,
+    discount: 35,
+    rating: 4.7,
+    sold: 8100,
+    icon: "🔌"
+  },
+
+  {
+    id: 23,
+    name: "20,000mAh Power Bank",
+    category: "accessories",
+    price: 25000,
+    oldPrice: 36000,
+    discount: 31,
+    rating: 4.8,
+    sold: 2930,
+    icon: "🔋"
+  },
+
+  {
+    id: 24,
+    name: "Premium Phone Stand",
+    category: "accessories",
+    price: 8500,
+    oldPrice: 12000,
+    discount: 29,
+    rating: 4.5,
+    sold: 1180,
+    icon: "📱"
   }
 
 ];
 
-/* =========================
-   CATEGORIES
-========================= */
 
-const categories = [
+/* =========================================================
+   FORMAT MONEY
+========================================================= */
 
-  {
-    name: "Smartphones",
-    icon: "📱",
-    description: "Premium mobile devices"
-  },
+function money(amount) {
 
-  {
-    name: "Laptops",
-    icon: "💻",
-    description: "Powerful computers"
-  },
+  return "₦" + Number(amount).toLocaleString("en-NG");
 
-  {
-    name: "Audio",
-    icon: "🎧",
-    description: "Headphones & speakers"
-  },
+}
 
-  {
-    name: "Gaming",
-    icon: "🎮",
-    description: "Gaming equipment"
-  },
 
-  {
-    name: "Wearables",
-    icon: "⌚",
-    description: "Smart watches"
-  },
+/* =========================================================
+   INITIALIZATION
+========================================================= */
 
-  {
-    name: "Accessories",
-    icon: "🔌",
-    description: "Tech accessories"
-  },
+document.addEventListener("DOMContentLoaded", () => {
 
-  {
-    name: "Cameras",
-    icon: "📷",
-    description: "Digital cameras"
-  },
+  setupAuth();
 
-  {
-    name: "Networking",
-    icon: "🌐",
-    description: "Network equipment"
+  renderProducts();
+
+  renderFlashDeals();
+
+  updateCart();
+
+  startCountdown();
+
+  loadOrders();
+
+  if (currentUser) {
+
+    showStore();
+
+  } else {
+
+    showAuth();
+
   }
 
-];
+});
 
-/* =========================
-   STATE
-========================= */
 
-let cart = JSON.parse(
-  localStorage.getItem("goddenCart") || "[]"
-);
+/* =========================================================
+   AUTH SETUP
+========================================================= */
 
-let currentUser = JSON.parse(
-  localStorage.getItem("goddenCurrentUser") || "null"
-);
+function setupAuth() {
 
-/* =========================
-   DOM
-========================= */
+  const loginForm =
+    document.getElementById("loginForm");
 
-const loadingScreen =
-  document.getElementById("loadingScreen");
+  const registerForm =
+    document.getElementById("registerForm");
 
-const authScreen =
-  document.getElementById("authScreen");
 
-const storeApp =
-  document.getElementById("storeApp");
+  loginForm.addEventListener("submit", login);
 
-const loginForm =
-  document.getElementById("loginForm");
-
-const registerForm =
-  document.getElementById("registerForm");
-
-const productGrid =
-  document.getElementById("productGrid");
-
-const categoryGrid =
-  document.getElementById("categoryGrid");
-
-const categoryFilter =
-  document.getElementById("categoryFilter");
-
-const searchInput =
-  document.getElementById("searchInput");
-
-const cartDrawer =
-  document.getElementById("cartDrawer");
-
-const cartOverlay =
-  document.getElementById("cartOverlay");
-
-const cartItems =
-  document.getElementById("cartItems");
-
-const cartTotal =
-  document.getElementById("cartTotal");
-
-const cartCount =
-  document.getElementById("cartCount");
-
-const productModal =
-  document.getElementById("productModal");
-
-const productModalContent =
-  document.getElementById("productModalContent");
-
-const accountModal =
-  document.getElementById("accountModal");
-
-const appPopup =
-  document.getElementById("appPopup");
-
-const toast =
-  document.getElementById("toast");
-
-const toastMessage =
-  document.getElementById("toastMessage");
-
-/* =========================
-   HELPERS
-========================= */
-
-function formatPrice(price) {
-
-  return new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-    maximumFractionDigits: 0
-  }).format(price);
-
-}
-
-function saveCart() {
-
-  localStorage.setItem(
-    "goddenCart",
-    JSON.stringify(cart)
+  registerForm.addEventListener(
+    "submit",
+    register
   );
 
 }
 
-function showToast(message) {
 
-  toastMessage.textContent = message;
-
-  toast.classList.add("show");
-
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2500);
-
-}
-
-function scrollToTop() {
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-
-}
-
-/* =========================
-   AUTH
-========================= */
-
-function getUsers() {
-
-  return JSON.parse(
-    localStorage.getItem("goddenUsers") || "[]"
-  );
-
-}
-
-function saveUsers(users) {
-
-  localStorage.setItem(
-    "goddenUsers",
-    JSON.stringify(users)
-  );
-
-}
+/* =========================================================
+   SHOW LOGIN
+========================================================= */
 
 function showLogin() {
 
-  loginForm.classList.remove("hidden");
-  registerForm.classList.add("hidden");
+  document
+    .getElementById("loginForm")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("registerForm")
+    .classList.add("hidden");
+
+
+  document
+    .getElementById("loginTab")
+    .classList.add("active");
+
+  document
+    .getElementById("registerTab")
+    .classList.remove("active");
 
 }
+
+
+/* =========================================================
+   SHOW REGISTER
+========================================================= */
 
 function showRegister() {
 
-  loginForm.classList.add("hidden");
-  registerForm.classList.remove("hidden");
+  document
+    .getElementById("loginForm")
+    .classList.add("hidden");
+
+  document
+    .getElementById("registerForm")
+    .classList.remove("hidden");
+
+
+  document
+    .getElementById("loginTab")
+    .classList.remove("active");
+
+  document
+    .getElementById("registerTab")
+    .classList.add("active");
 
 }
 
-function enterStore() {
 
-  authScreen.classList.add("hidden");
-  storeApp.classList.remove("hidden");
+/* =========================================================
+   REGISTER
+========================================================= */
 
-  renderCategories();
-  renderProducts();
-  renderCart();
-  updateAccount();
+function register(event) {
+
+  event.preventDefault();
+
+
+  const name =
+    document
+      .getElementById("registerName")
+      .value
+      .trim();
+
+  const email =
+    document
+      .getElementById("registerEmail")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const password =
+    document
+      .getElementById("registerPassword")
+      .value;
+
+
+  if (users.some(user => user.email === email)) {
+
+    showToast(
+      "An account with this email already exists."
+    );
+
+    return;
+
+  }
+
+
+  const user = {
+
+    id: Date.now(),
+
+    name,
+
+    email,
+
+    password
+
+  };
+
+
+  users.push(user);
+
+  localStorage.setItem(
+    "godden_users",
+    JSON.stringify(users)
+  );
+
+
+  currentUser = user;
+
+  localStorage.setItem(
+    "godden_current_user",
+    JSON.stringify(currentUser)
+  );
+
+
+  showToast(
+    "Account created successfully!"
+  );
+
+
+  setTimeout(showStore, 500);
 
 }
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+function login(event) {
+
+  event.preventDefault();
+
+
+  const email =
+    document
+      .getElementById("loginEmail")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const password =
+    document
+      .getElementById("loginPassword")
+      .value;
+
+
+  const user = users.find(
+    item =>
+      item.email === email &&
+      item.password === password
+  );
+
+
+  if (!user) {
+
+    showToast(
+      "Incorrect email or password."
+    );
+
+    return;
+
+  }
+
+
+  currentUser = user;
+
+  localStorage.setItem(
+    "godden_current_user",
+    JSON.stringify(currentUser)
+  );
+
+
+  showToast(
+    "Welcome back!"
+  );
+
+
+  setTimeout(showStore, 400);
+
+}
+
+
+/* =========================================================
+   SHOW STORE
+========================================================= */
+
+function showStore() {
+
+  document
+    .getElementById("authPage")
+    .classList.add("hidden");
+
+  document
+    .getElementById("store")
+    .classList.remove("hidden");
+
+
+  updateUserUI();
+
+}
+
+
+/* =========================================================
+   SHOW AUTH
+========================================================= */
+
+function showAuth() {
+
+  document
+    .getElementById("authPage")
+    .classList.remove("hidden");
+
+  document
+    .getElementById("store")
+    .classList.add("hidden");
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
 
 function logout() {
 
   currentUser = null;
 
-  localStorage.removeItem("goddenCurrentUser");
+  localStorage.removeItem(
+    "godden_current_user"
+  );
 
-  storeApp.classList.add("hidden");
-  authScreen.classList.remove("hidden");
+
+  closeAccount();
+
+  closeCart();
+
+  closeOrders();
+
+
+  showAuth();
 
   showLogin();
 
-  showToast("You have been logged out.");
+  showToast(
+    "You have been logged out."
+  );
 
 }
 
-document
-  .getElementById("showRegister")
-  .addEventListener("click", showRegister);
 
-document
-  .getElementById("showLogin")
-  .addEventListener("click", showLogin);
+/* =========================================================
+   USER UI
+========================================================= */
 
-/* LOGIN */
+function updateUserUI() {
 
-document
-  .getElementById("loginFormElement")
-  .addEventListener("submit", function(e) {
+  if (!currentUser) return;
 
-    e.preventDefault();
 
-    const email =
-      document.getElementById("loginEmail")
-        .value
-        .trim()
-        .toLowerCase();
+  const headerName =
+    document.getElementById("headerName");
 
-    const password =
-      document.getElementById("loginPassword")
-        .value;
+  const accountName =
+    document.getElementById("accountName");
 
-    const users = getUsers();
+  const accountEmail =
+    document.getElementById("accountEmail");
 
-    const user = users.find(
-      u =>
-        u.email === email &&
-        u.password === password
-    );
 
-    if (!user) {
+  if (headerName) {
 
-      showToast(
-        "Invalid email or password."
-      );
+    headerName.textContent =
+      currentUser.name.split(" ")[0];
 
-      return;
+  }
 
-    }
 
-    currentUser = user;
+  if (accountName) {
 
-    localStorage.setItem(
-      "goddenCurrentUser",
-      JSON.stringify(user)
-    );
+    accountName.textContent =
+      currentUser.name;
 
-    showToast("Login successful.");
+  }
 
-    setTimeout(() => {
-      enterStore();
-    }, 500);
 
-  });
+  if (accountEmail) {
 
-/* REGISTER */
+    accountEmail.textContent =
+      currentUser.email;
 
-document
-  .getElementById("registerFormElement")
-  .addEventListener("submit", function(e) {
-
-    e.preventDefault();
-
-    const name =
-      document.getElementById("registerName")
-        .value
-        .trim();
-
-    const email =
-      document.getElementById("registerEmail")
-        .value
-        .trim()
-        .toLowerCase();
-
-    const password =
-      document.getElementById("registerPassword")
-        .value;
-
-    const confirm =
-      document.getElementById("registerConfirm")
-        .value;
-
-    if (password !== confirm) {
-
-      showToast(
-        "Passwords do not match."
-      );
-
-      return;
-
-    }
-
-    const users = getUsers();
-
-    if (
-      users.some(
-        user => user.email === email
-      )
-    ) {
-
-      showToast(
-        "An account with this email already exists."
-      );
-
-      return;
-
-    }
-
-    const user = {
-      id: Date.now(),
-      name,
-      email,
-      password
-    };
-
-    users.push(user);
-
-    saveUsers(users);
-
-    currentUser = user;
-
-    localStorage.setItem(
-      "goddenCurrentUser",
-      JSON.stringify(user)
-    );
-
-    showToast(
-      "Account created successfully."
-    );
-
-    setTimeout(() => {
-
-      enterStore();
-
-      /*
-        Show app notification after
-        successful registration.
-      */
-      setTimeout(() => {
-        openAppPopup();
-      }, 1000);
-
-    }, 500);
-
-  });
-
-/* =========================
-   PRODUCTS
-========================= */
-
-function renderCategories() {
-
-  categoryGrid.innerHTML = "";
-
-  categories.forEach(category => {
-
-    const card =
-      document.createElement("div");
-
-    card.className = "category-card";
-
-    card.innerHTML = `
-
-      <div class="category-icon">
-        ${category.icon}
-      </div>
-
-      <h3>
-        ${category.name}
-      </h3>
-
-      <p>
-        ${category.description}
-      </p>
-
-    `;
-
-    card.addEventListener("click", () => {
-
-      categoryFilter.value =
-        category.name;
-
-      renderProducts();
-
-      document
-        .getElementById("products")
-        .scrollIntoView({
-          behavior: "smooth"
-        });
-
-    });
-
-    categoryGrid.appendChild(card);
-
-  });
+  }
 
 }
 
-function populateCategoryFilter() {
 
-  categories.forEach(category => {
-
-    const option =
-      document.createElement("option");
-
-    option.value = category.name;
-    option.textContent = category.name;
-
-    categoryFilter.appendChild(option);
-
-  });
-
-}
+/* =========================================================
+   RENDER PRODUCTS
+========================================================= */
 
 function renderProducts() {
 
-  const search =
-    searchInput.value
-      .trim()
-      .toLowerCase();
+  const grid =
+    document.getElementById("productGrid");
 
-  const category =
-    categoryFilter.value;
+  if (!grid) return;
 
-  let filtered =
-    products.filter(product => {
 
-      const matchesSearch =
-        product.name
-          .toLowerCase()
-          .includes(search) ||
-        product.category
-          .toLowerCase()
-          .includes(search);
+  let filtered = products;
 
-      const matchesCategory =
-        category === "all" ||
-        product.category === category;
 
-      return (
-        matchesSearch &&
-        matchesCategory
+  if (currentFilter !== "all") {
+
+    filtered =
+      products.filter(
+        product =>
+          product.category === currentFilter
       );
-
-    });
-
-  productGrid.innerHTML = "";
-
-  if (!filtered.length) {
-
-    productGrid.innerHTML = `
-
-      <div style="
-        grid-column:1/-1;
-        text-align:center;
-        padding:70px 20px;
-        color:#777;
-      ">
-
-        No products found.
-
-      </div>
-
-    `;
-
-    return;
 
   }
 
-  filtered.forEach(product => {
 
-    const card =
-      document.createElement("article");
+  filtered =
+    filtered.slice(0, productsShown);
 
-    card.className = "product-card";
 
-    card.innerHTML = `
+  grid.innerHTML = filtered
+    .map(createProductCard)
+    .join("");
+
+}
+
+
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
+
+function createProductCard(product) {
+
+  return `
+
+    <article
+      class="product-card"
+      onclick="openProduct(${product.id})"
+    >
 
       <div class="product-image">
+
+        <span class="sale-badge">
+          -${product.discount}%
+        </span>
+
+        <button
+          class="wishlist"
+          onclick="event.stopPropagation(); toggleWishlist(${product.id})"
+        >
+          ♡
+        </button>
+
         ${product.icon}
+
       </div>
+
 
       <div class="product-info">
 
-        <span class="product-category">
-          ${product.category}
-        </span>
-
-        <h3>
+        <div class="product-name">
           ${product.name}
-        </h3>
-
-        <p class="product-description">
-          ${product.description}
-        </p>
-
-        <div class="product-bottom">
-
-          <span class="product-price">
-            ${formatPrice(product.price)}
-          </span>
-
-          <button
-            class="add-btn"
-            data-id="${product.id}"
-          >
-            +
-          </button>
-
         </div>
 
-      </div>
 
-    `;
+        <div class="product-rating">
 
-    card.addEventListener("click", function(e) {
-
-      if (
-        e.target.classList.contains("add-btn")
-      ) {
-
-        addToCart(product.id);
-
-        return;
-
-      }
-
-      openProduct(product.id);
-
-    });
-
-    productGrid.appendChild(card);
-
-  });
-
-}
-
-/* =========================
-   CART
-========================= */
-
-function addToCart(id) {
-
-  const existing =
-    cart.find(item => item.id === id);
-
-  if (existing) {
-
-    existing.quantity++;
-
-  } else {
-
-    cart.push({
-      id,
-      quantity: 1
-    });
-
-  }
-
-  saveCart();
-
-  renderCart();
-
-  showToast("Added to cart.");
-
-}
-
-function removeFromCart(id) {
-
-  cart =
-    cart.filter(item => item.id !== id);
-
-  saveCart();
-
-  renderCart();
-
-}
-
-function changeQuantity(id, change) {
-
-  const item =
-    cart.find(item => item.id === id);
-
-  if (!item) return;
-
-  item.quantity += change;
-
-  if (item.quantity <= 0) {
-
-    removeFromCart(id);
-
-    return;
-
-  }
-
-  saveCart();
-
-  renderCart();
-
-}
-
-function renderCart() {
-
-  cartItems.innerHTML = "";
-
-  let total = 0;
-  let count = 0;
-
-  if (!cart.length) {
-
-    cartItems.innerHTML = `
-
-      <div class="empty-cart">
-
-        <div style="font-size:50px">
-          🛒
-        </div>
-
-        <p>
-          Your cart is empty.
-        </p>
-
-      </div>
-
-    `;
-
-  }
-
-  cart.forEach(item => {
-
-    const product =
-      products.find(
-        product => product.id === item.id
-      );
-
-    if (!product) return;
-
-    const subtotal =
-      product.price * item.quantity;
-
-    total += subtotal;
-
-    count += item.quantity;
-
-    const div =
-      document.createElement("div");
-
-    div.className = "cart-item";
-
-    div.innerHTML = `
-
-      <div class="cart-item-image">
-        ${product.icon}
-      </div>
-
-      <div class="cart-item-info">
-
-        <h4>
-          ${product.name}
-        </h4>
-
-        <p>
-          ${formatPrice(product.price)}
-        </p>
-
-        <div class="qty-controls">
-
-          <button
-            data-action="minus"
-            data-id="${product.id}"
-          >
-            -
-          </button>
+          ★ ${product.rating}
 
           <span>
-            ${item.quantity}
+            (${formatSold(product.sold)})
           </span>
 
-          <button
-            data-action="plus"
-            data-id="${product.id}"
-          >
-            +
-          </button>
+        </div>
+
+
+        <div class="product-price">
+
+          <strong>
+            ${money(product.price)}
+          </strong>
+
+          <span class="product-old">
+            ${money(product.oldPrice)}
+          </span>
 
         </div>
 
-      </div>
 
-      <button
-        class="remove-item"
-        data-action="remove"
-        data-id="${product.id}"
-      >
-        ✕
-      </button>
+        <div class="product-sold">
 
-    `;
+          ${formatSold(product.sold)}+ sold
 
-    cartItems.appendChild(div);
+        </div>
 
-  });
 
-  cartTotal.textContent =
-    formatPrice(total);
-
-  cartCount.textContent = count;
-
-}
-
-/* CART EVENTS */
-
-cartItems.addEventListener("click", function(e) {
-
-  const button =
-    e.target.closest("button");
-
-  if (!button) return;
-
-  const id =
-    Number(button.dataset.id);
-
-  const action =
-    button.dataset.action;
-
-  if (action === "plus") {
-
-    changeQuantity(id, 1);
-
-  }
-
-  if (action === "minus") {
-
-    changeQuantity(id, -1);
-
-  }
-
-  if (action === "remove") {
-
-    removeFromCart(id);
-
-  }
-
-});
-
-/* =========================
-   CART OPEN/CLOSE
-========================= */
-
-function openCart() {
-
-  cartDrawer.classList.add("open");
-  cartOverlay.classList.remove("hidden");
-
-}
-
-function closeCart() {
-
-  cartDrawer.classList.remove("open");
-  cartOverlay.classList.add("hidden");
-
-}
-
-document
-  .getElementById("cartBtn")
-  .addEventListener("click", openCart);
-
-document
-  .getElementById("closeCart")
-  .addEventListener("click", closeCart);
-
-cartOverlay.addEventListener(
-  "click",
-  closeCart
-);
-
-/* =========================
-   PRODUCT MODAL
-========================= */
-
-function openProduct(id) {
-
-  const product =
-    products.find(
-      product => product.id === id
-    );
-
-  if (!product) return;
-
-  productModalContent.innerHTML = `
-
-    <div class="modal-product">
-
-      <div class="modal-product-image">
-        ${product.icon}
-      </div>
-
-      <div class="modal-product-info">
-
-        <span class="product-category">
-          ${product.category}
+        <span class="delivery">
+          ✓ Free delivery available
         </span>
 
-        <h2>
-          ${product.name}
-        </h2>
+      </div>
 
-        <div class="modal-price">
-          ${formatPrice(product.price)}
-        </div>
 
-        <p>
-          ${product.description}
-        </p>
+      <div class="product-actions">
 
         <button
-          class="primary-btn"
-          id="modalAddButton"
+          class="add-cart"
+          onclick="event.stopPropagation(); addToCart(${product.id})"
         >
-          ADD TO CART
+          Add to Cart
         </button>
 
       </div>
 
-    </div>
+    </article>
 
   `;
 
-  productModal.classList.remove("hidden");
+}
+
+
+/* =========================================================
+   SOLD FORMAT
+========================================================= */
+
+function formatSold(number) {
+
+  if (number >= 1000) {
+
+    return (
+      (number / 1000)
+        .toFixed(1)
+        .replace(".0", "") +
+      "k"
+    );
+
+  }
+
+  return number;
+
+}
+
+
+/* =========================================================
+   FLASH DEALS
+========================================================= */
+
+function renderFlashDeals() {
+
+  const grid =
+    document.getElementById("flashGrid");
+
+  if (!grid) return;
+
+
+  const deals =
+    [...products]
+      .sort(
+        (a, b) =>
+          b.discount - a.discount
+      )
+      .slice(0, 6);
+
+
+  grid.innerHTML = deals
+    .map(product => `
+
+      <article
+        class="flash-card"
+        onclick="openProduct(${product.id})"
+      >
+
+        <div class="flash-image">
+          ${product.icon}
+        </div>
+
+        <div class="flash-info">
+
+          <strong class="flash-price">
+            ${money(product.price)}
+          </strong>
+
+          <span class="flash-old">
+            ${money(product.oldPrice)}
+          </span>
+
+          <div class="product-rating">
+            ★ ${product.rating}
+          </div>
+
+          <div class="progress">
+            <span
+              style="width:${Math.min(
+                product.discount * 2.3,
+                92
+              )}%"
+            ></span>
+          </div>
+
+          <small>
+            ${product.discount}% claimed
+          </small>
+
+        </div>
+
+      </article>
+
+    `)
+    .join("");
+
+}
+
+
+/* =========================================================
+   FILTER PRODUCTS
+========================================================= */
+
+function filterProducts(category) {
+
+  currentFilter = category;
+
+  productsShown = 20;
+
 
   document
-    .getElementById("modalAddButton")
-    .addEventListener("click", () => {
+    .getElementById("products")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
 
-      addToCart(product.id);
 
-      productModal.classList.add("hidden");
+  renderProducts();
 
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function searchProducts() {
+
+  const input =
+    document.getElementById("searchInput");
+
+  if (!input) return;
+
+
+  const query =
+    input.value
+      .trim()
+      .toLowerCase();
+
+
+  if (!query) {
+
+    currentFilter = "all";
+
+    renderProducts();
+
+    return;
+
+  }
+
+
+  const results =
+    products.filter(product =>
+      product.name
+        .toLowerCase()
+        .includes(query) ||
+      product.category
+        .toLowerCase()
+        .includes(query)
+    );
+
+
+  const grid =
+    document.getElementById("productGrid");
+
+
+  grid.innerHTML =
+    results.length
+      ? results.map(createProductCard).join("")
+      : `
+
+        <div
+          style="
+            grid-column:1/-1;
+            padding:50px;
+            text-align:center;
+          "
+        >
+
+          <div style="font-size:45px">
+            🔍
+          </div>
+
+          <h3>
+            No products found
+          </h3>
+
+          <p style="color:#777">
+            Try another search.
+          </p>
+
+        </div>
+
+      `;
+
+
+  document
+    .getElementById("products")
+    .scrollIntoView({
+      behavior: "smooth"
     });
 
 }
 
-document
-  .getElementById("closeProductModal")
-  .addEventListener("click", () => {
 
-    productModal.classList.add("hidden");
+/* =========================================================
+   LOAD MORE
+========================================================= */
 
-  });
+function loadMoreProducts() {
 
-productModal.addEventListener("click", e => {
+  productsShown += 10;
 
-  if (e.target === productModal) {
-
-    productModal.classList.add("hidden");
-
-  }
-
-});
-
-/* =========================
-   ACCOUNT
-========================= */
-
-function updateAccount() {
-
-  if (!currentUser) return;
-
-  document.getElementById(
-    "accountName"
-  ).textContent = currentUser.name;
-
-  document.getElementById(
-    "accountEmail"
-  ).textContent = currentUser.email;
+  renderProducts();
 
 }
 
-document
-  .getElementById("accountBtn")
-  .addEventListener("click", () => {
 
-    updateAccount();
+/* =========================================================
+   ADD TO CART
+========================================================= */
 
-    accountModal.classList.remove("hidden");
+function addToCart(productId) {
 
-  });
+  const product =
+    products.find(
+      item => item.id === productId
+    );
 
-document
-  .getElementById("closeAccountModal")
-  .addEventListener("click", () => {
 
-    accountModal.classList.add("hidden");
+  if (!product) return;
 
-  });
 
-document
-  .getElementById("accountLogout")
-  .addEventListener("click", logout);
+  const existing =
+    cart.find(
+      item => item.id === productId
+    );
 
-document
-  .getElementById("footerLogout")
-  .addEventListener("click", logout);
 
-/* =========================
-   WHATSAPP CHECKOUT
-========================= */
+  if (existing) {
 
-document
-  .getElementById("checkoutBtn")
-  .addEventListener("click", checkout);
+    existing.quantity += 1;
 
-function checkout() {
+  } else {
+
+    cart.push({
+
+      id: product.id,
+
+      quantity: 1
+
+    });
+
+  }
+
+
+  saveCart();
+
+  updateCart();
+
+
+  showToast(
+    `${product.name} added to cart.`
+  );
+
+}
+
+
+/* =========================================================
+   SAVE CART
+========================================================= */
+
+function saveCart() {
+
+  localStorage.setItem(
+    "godden_cart",
+    JSON.stringify(cart)
+  );
+
+}
+
+
+/* =========================================================
+   UPDATE CART
+========================================================= */
+
+function updateCart() {
+
+  const count =
+    cart.reduce(
+      (total, item) =>
+        total + item.quantity,
+      0
+    );
+
+
+  const countElement =
+    document.getElementById("cartCount");
+
+
+  if (countElement) {
+
+    countElement.textContent =
+      count;
+
+  }
+
+
+  renderCart();
+
+}
+
+
+/* =========================================================
+   RENDER CART
+========================================================= */
+
+function renderCart() {
+
+  const container =
+    document.getElementById("cartItems");
+
+  const totalElement =
+    document.getElementById("cartTotal");
+
+
+  if (!container) return;
+
 
   if (!cart.length) {
 
-    showToast(
-      "Your cart is empty."
-    );
+    container.innerHTML = `
+
+      <div class="empty-cart">
+
+        <div>
+          🛒
+        </div>
+
+        <h3>
+          Your cart is empty
+        </h3>
+
+        <p>
+          Add something you love.
+        </p>
+
+      </div>
+
+    `;
+
+
+    if (totalElement) {
+
+      totalElement.textContent =
+        "₦0";
+
+    }
 
     return;
 
   }
 
-  let message =
-    "Hello GODDEN TECH GLOBAL 👋%0A%0A";
-
-  message +=
-    "I want to order:%0A%0A";
 
   let total = 0;
 
-  cart.forEach(item => {
 
-    const product =
-      products.find(
-        product => product.id === item.id
-      );
-
-    if (!product) return;
-
-    const subtotal =
-      product.price * item.quantity;
-
-    total += subtotal;
-
-    message +=
-      `• ${product.name} x${item.quantity} - ${formatPrice(subtotal)}%0A`;
-
-  });
-
-  message +=
-    `%0A*Total: ${formatPrice(total)}*%0A%0A`;
-
-  if (currentUser) {
-
-    message +=
-      `Customer: ${currentUser.name}%0A`;
-
-    message +=
-      `Email: ${currentUser.email}%0A%0A`;
-
-  }
-
-  message +=
-    "Please provide the next steps for my order.";
-
-  const url =
-    `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
-
-  window.open(url, "_blank");
-
-  saveOrder();
-
-}
-
-/* =========================
-   SAVE ORDER TO BACKEND
-========================= */
-
-async function saveOrder() {
-
-  if (!currentUser || !cart.length) {
-    return;
-  }
-
-  const order = {
-
-    customer: {
-      name: currentUser.name,
-      email: currentUser.email
-    },
-
-    items: cart.map(item => {
+  container.innerHTML =
+    cart.map(item => {
 
       const product =
         products.find(
-          product => product.id === item.id
+          p => p.id === item.id
         );
 
-      return {
-        name: product.name,
-        quantity: item.quantity,
-        price: product.price
-      };
 
-    }),
+      if (!product) return "";
 
-    createdAt:
-      new Date().toISOString()
 
-  };
+      const itemTotal =
+        product.price *
+        item.quantity;
 
-  try {
 
-    await fetch(
-      `${BACKEND_URL}/api/orders`,
-      {
-        method: "POST",
+      total += itemTotal;
 
-        headers: {
-          "Content-Type":
-            "application/json"
-        },
 
-        body:
-          JSON.stringify(order)
+      return `
 
-      }
-    );
+        <div class="cart-item">
 
-  } catch (error) {
+          <div class="cart-item-image">
+            ${product.icon}
+          </div>
 
-    console.log(
-      "Order backend unavailable:",
-      error
-    );
+
+          <div class="cart-item-info">
+
+            <div class="cart-item-name">
+              ${product.name}
+            </div>
+
+            <div class="cart-item-price">
+              ${money(itemTotal)}
+            </div>
+
+
+            <div class="cart-controls">
+
+              <button
+                onclick="changeQuantity(${product.id}, -1)"
+              >
+                −
+              </button>
+
+              <strong>
+                ${item.quantity}
+              </strong>
+
+              <button
+                onclick="changeQuantity(${product.id}, 1)"
+              >
+                +
+              </button>
+
+              <button
+                onclick="removeFromCart(${product.id})"
+              >
+                🗑️
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    })
+    .join("");
+
+
+  if (totalElement) {
+
+    totalElement.textContent =
+      money(total);
 
   }
 
 }
 
-/* ======================
+
+/* =========================================================
+   CHANGE QUANTITY
+========================================================= */
+
+function changeQuantity(
+  productId,
+  amount
+) {
+
+  const item =
+    cart.find(
+      cartItem =>
+        cartItem.id === productId
+    )
