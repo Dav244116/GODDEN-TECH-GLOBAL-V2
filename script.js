@@ -1,328 +1,422 @@
-/* =====================================================
+"use strict";
+
+/* =========================================================
    GODDEN TECH GLOBAL
-   Frontend Store System
-===================================================== */
+   Frontend Marketplace
+========================================================= */
 
 const WHATSAPP_NUMBER = "2347068270950";
+
+/*
+  When the real app is ready, replace "#" with the APK/app URL.
+*/
 const APP_URL = "#";
 
-let currentUser = JSON.parse(localStorage.getItem("goddenCurrentUser")) || null;
-let cart = JSON.parse(localStorage.getItem("goddenCart")) || [];
-let orders = JSON.parse(localStorage.getItem("goddenOrders")) || [];
 
-let activeCategory = "all";
-let visibleProducts = 12;
-
-
-/* =====================================================
+/* =========================================================
    PRODUCTS
-===================================================== */
+========================================================= */
 
 const products = [
+
   {
     id: 1,
     name: "iPhone 15 Pro",
-    category: "smartphones",
-    price: 1250000,
-    oldPrice: 1400000,
-    emoji: "📱",
+    category: "Smartphones",
+    price: 1350000,
+    oldPrice: 1450000,
     rating: 4.9,
+    icon: "📱",
     deal: true
   },
+
   {
     id: 2,
     name: "Samsung Galaxy S25",
-    category: "smartphones",
-    price: 1100000,
-    oldPrice: 1250000,
-    emoji: "📱",
+    category: "Smartphones",
+    price: 980000,
+    oldPrice: 1100000,
     rating: 4.8,
+    icon: "📱",
     deal: true
   },
+
   {
     id: 3,
     name: "Google Pixel 9",
-    category: "smartphones",
+    category: "Smartphones",
     price: 850000,
-    oldPrice: 950000,
-    emoji: "📱",
+    oldPrice: 930000,
     rating: 4.7,
+    icon: "📱",
     deal: false
   },
+
   {
     id: 4,
     name: "MacBook Air M3",
-    category: "laptops",
-    price: 1650000,
-    oldPrice: 1800000,
-    emoji: "💻",
+    category: "Laptops",
+    price: 1850000,
+    oldPrice: 2000000,
     rating: 4.9,
+    icon: "💻",
     deal: true
   },
+
   {
     id: 5,
     name: "HP Pavilion 15",
-    category: "laptops",
-    price: 950000,
-    oldPrice: 1050000,
-    emoji: "💻",
+    category: "Laptops",
+    price: 920000,
+    oldPrice: 1000000,
     rating: 4.6,
+    icon: "💻",
     deal: false
   },
+
   {
     id: 6,
     name: "Lenovo IdeaPad Slim",
-    category: "laptops",
+    category: "Laptops",
     price: 780000,
     oldPrice: 850000,
-    emoji: "💻",
     rating: 4.5,
+    icon: "💻",
     deal: false
   },
+
   {
     id: 7,
     name: "Sony WH-1000XM5",
-    category: "audio",
+    category: "Audio",
     price: 420000,
-    oldPrice: 480000,
-    emoji: "🎧",
+    oldPrice: 470000,
     rating: 4.9,
+    icon: "🎧",
     deal: true
   },
+
   {
     id: 8,
     name: "AirPods Pro",
-    category: "audio",
-    price: 350000,
-    oldPrice: 390000,
-    emoji: "🎧",
+    category: "Audio",
+    price: 285000,
+    oldPrice: 320000,
     rating: 4.8,
-    deal: true
+    icon: "🎧",
+    deal: false
   },
+
   {
     id: 9,
     name: "JBL Tune 770NC",
-    category: "audio",
-    price: 120000,
-    oldPrice: 145000,
-    emoji: "🎧",
+    category: "Audio",
+    price: 145000,
+    oldPrice: 170000,
     rating: 4.6,
-    deal: false
+    icon: "🎧",
+    deal: true
   },
+
   {
     id: 10,
     name: "PlayStation 5",
-    category: "gaming",
-    price: 950000,
-    oldPrice: 1050000,
-    emoji: "🎮",
+    category: "Gaming",
+    price: 920000,
+    oldPrice: 1000000,
     rating: 4.9,
+    icon: "🎮",
     deal: true
   },
+
   {
     id: 11,
     name: "Xbox Wireless Controller",
-    category: "gaming",
-    price: 110000,
-    oldPrice: 130000,
-    emoji: "🎮",
+    category: "Gaming",
+    price: 115000,
+    oldPrice: 135000,
     rating: 4.7,
+    icon: "🎮",
     deal: false
   },
+
   {
     id: 12,
-    name: "Gaming Headset",
-    category: "gaming",
-    price: 85000,
-    oldPrice: 100000,
-    emoji: "🎧",
+    name: "Gaming Headset Pro",
+    category: "Gaming",
+    price: 95000,
+    oldPrice: 120000,
     rating: 4.5,
-    deal: false
+    icon: "🎧",
+    deal: true
   },
+
   {
     id: 13,
     name: "Apple Watch Series 10",
-    category: "wearables",
-    price: 520000,
-    oldPrice: 590000,
-    emoji: "⌚",
+    category: "Wearables",
+    price: 620000,
+    oldPrice: 700000,
     rating: 4.8,
-    deal: true
+    icon: "⌚",
+    deal: false
   },
+
   {
     id: 14,
     name: "Samsung Galaxy Watch",
-    category: "wearables",
-    price: 300000,
-    oldPrice: 350000,
-    emoji: "⌚",
-    rating: 4.6,
-    deal: false
+    category: "Wearables",
+    price: 350000,
+    oldPrice: 400000,
+    rating: 4.7,
+    icon: "⌚",
+    deal: true
   },
+
   {
     id: 15,
     name: "Smart Fitness Band",
-    category: "wearables",
+    category: "Wearables",
     price: 45000,
     oldPrice: 60000,
-    emoji: "⌚",
-    rating: 4.3,
+    rating: 4.4,
+    icon: "⌚",
     deal: false
   },
+
   {
     id: 16,
-    name: "20,000mAh Power Bank",
-    category: "accessories",
-    price: 65000,
-    oldPrice: 80000,
-    emoji: "🔋",
-    rating: 4.6,
+    name: "20000mAh Power Bank",
+    category: "Accessories",
+    price: 55000,
+    oldPrice: 70000,
+    rating: 4.5,
+    icon: "🔋",
     deal: true
   },
+
   {
     id: 17,
     name: "65W Fast Charger",
-    category: "accessories",
+    category: "Accessories",
     price: 35000,
     oldPrice: 45000,
-    emoji: "🔌",
-    rating: 4.7,
+    rating: 4.6,
+    icon: "🔌",
     deal: false
   },
+
   {
     id: 18,
-    name: "USB-C Cable",
-    category: "accessories",
+    name: "USB-C Fast Cable",
+    category: "Accessories",
     price: 12000,
     oldPrice: 18000,
-    emoji: "🔌",
-    rating: 4.4,
+    rating: 4.5,
+    icon: "🔌",
     deal: false
   },
+
   {
     id: 19,
     name: "Wireless Charging Pad",
-    category: "accessories",
+    category: "Accessories",
     price: 28000,
     oldPrice: 35000,
-    emoji: "⚡",
     rating: 4.5,
+    icon: "🔋",
     deal: true
   },
+
   {
     id: 20,
     name: "Mechanical Gaming Keyboard",
-    category: "gaming",
-    price: 95000,
-    oldPrice: 120000,
-    emoji: "⌨️",
-    rating: 4.7,
+    category: "Gaming",
+    price: 85000,
+    oldPrice: 105000,
+    rating: 4.8,
+    icon: "⌨️",
     deal: false
   },
+
   {
     id: 21,
-    name: "Gaming Mouse",
-    category: "gaming",
-    price: 45000,
-    oldPrice: 60000,
-    emoji: "🖱️",
-    rating: 4.6,
-    deal: false
+    name: "Gaming Mouse RGB",
+    category: "Gaming",
+    price: 42000,
+    oldPrice: 55000,
+    rating: 4.7,
+    icon: "🖱️",
+    deal: true
   },
+
   {
     id: 22,
     name: "Bluetooth Speaker",
-    category: "audio",
+    category: "Audio",
     price: 75000,
-    oldPrice: 95000,
-    emoji: "🔊",
-    rating: 4.7,
-    deal: true
+    oldPrice: 90000,
+    rating: 4.6,
+    icon: "🔊",
+    deal: false
   },
+
   {
     id: 23,
     name: "Tablet Pro 12",
-    category: "smartphones",
-    price: 680000,
-    oldPrice: 750000,
-    emoji: "📱",
-    rating: 4.6,
-    deal: false
+    category: "Tablets",
+    price: 550000,
+    oldPrice: 620000,
+    rating: 4.7,
+    icon: "📲",
+    deal: true
   },
+
   {
     id: 24,
-    name: "Laptop Backpack",
-    category: "accessories",
+    name: "Premium Laptop Backpack",
+    category: "Accessories",
     price: 38000,
     oldPrice: 50000,
-    emoji: "🎒",
     rating: 4.5,
+    icon: "🎒",
     deal: false
   }
+
 ];
 
 
-/* =====================================================
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentUser =
+  JSON.parse(localStorage.getItem("goddenCurrentUser")) || null;
+
+let cart =
+  JSON.parse(localStorage.getItem("goddenCart")) || [];
+
+let orders =
+  JSON.parse(localStorage.getItem("goddenOrders")) || [];
+
+let currentCategory = "All";
+let searchTerm = "";
+let productsShown = 12;
+
+
+/* =========================================================
    HELPERS
-===================================================== */
+========================================================= */
 
-function money(value) {
-  return "₦" + Number(value).toLocaleString("en-NG");
+function money(amount) {
+
+  return new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    maximumFractionDigits: 0
+  }).format(amount);
+
 }
 
-function saveUser() {
-  localStorage.setItem(
-    "goddenCurrentUser",
-    JSON.stringify(currentUser)
-  );
-}
 
 function saveCart() {
+
   localStorage.setItem(
     "goddenCart",
     JSON.stringify(cart)
   );
+
 }
 
+
 function saveOrders() {
+
   localStorage.setItem(
     "goddenOrders",
     JSON.stringify(orders)
   );
+
 }
 
+
+function saveCurrentUser() {
+
+  localStorage.setItem(
+    "goddenCurrentUser",
+    JSON.stringify(currentUser)
+  );
+
+}
+
+
+function getUsers() {
+
+  return JSON.parse(
+    localStorage.getItem("goddenUsers") || "[]"
+  );
+
+}
+
+
+function saveUsers(users) {
+
+  localStorage.setItem(
+    "goddenUsers",
+    JSON.stringify(users)
+  );
+
+}
+
+
 function showToast(message) {
-  const toast = document.getElementById("toast");
+
+  const toast =
+    document.getElementById("toast");
 
   if (!toast) return;
 
   toast.textContent = message;
+
   toast.classList.add("show");
 
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 2500);
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer =
+    setTimeout(() => {
+
+      toast.classList.remove("show");
+
+    }, 2500);
+
 }
 
 
-/* =====================================================
+/* =========================================================
    AUTH
-===================================================== */
+========================================================= */
 
 function setupAuth() {
 
-  const loginTab = document.getElementById("loginTab");
-  const registerTab = document.getElementById("registerTab");
+  const loginTab =
+    document.getElementById("loginTab");
 
-  const loginForm = document.getElementById("loginForm");
-  const registerForm = document.getElementById("registerForm");
+  const registerTab =
+    document.getElementById("registerTab");
 
-  if (!loginTab || !registerTab || !loginForm || !registerForm) {
-    console.error("Authentication elements are missing.");
-    return;
-  }
+  const loginForm =
+    document.getElementById("loginForm");
 
-  loginTab.addEventListener("click", function () {
+  const registerForm =
+    document.getElementById("registerForm");
+
+  const goRegister =
+    document.getElementById("goRegister");
+
+  const goLogin =
+    document.getElementById("goLogin");
+
+
+  function showLogin() {
 
     loginTab.classList.add("active");
     registerTab.classList.remove("active");
@@ -330,10 +424,10 @@ function setupAuth() {
     loginForm.classList.remove("hidden");
     registerForm.classList.add("hidden");
 
-  });
+  }
 
 
-  registerTab.addEventListener("click", function () {
+  function showRegister() {
 
     registerTab.classList.add("active");
     loginTab.classList.remove("active");
@@ -341,773 +435,356 @@ function setupAuth() {
     registerForm.classList.remove("hidden");
     loginForm.classList.add("hidden");
 
-  });
+  }
 
 
-  registerForm.addEventListener("submit", function (event) {
+  loginTab.addEventListener(
+    "click",
+    showLogin
+  );
 
-    event.preventDefault();
+  registerTab.addEventListener(
+    "click",
+    showRegister
+  );
 
-    const name =
-      document.getElementById("registerName").value.trim();
+  goRegister.addEventListener(
+    "click",
+    showRegister
+  );
 
-    const email =
-      document.getElementById("registerEmail").value.trim().toLowerCase();
-
-    const password =
-      document.getElementById("registerPassword").value;
-
-    if (!name || !email || !password) {
-      showToast("Please fill in all fields.");
-      return;
-    }
-
-    if (password.length < 6) {
-      showToast("Password must contain at least 6 characters.");
-      return;
-    }
-
-    const users =
-      JSON.parse(localStorage.getItem("goddenUsers")) || [];
-
-    const exists =
-      users.some(user => user.email === email);
-
-    if (exists) {
-      showToast("An account with this email already exists.");
-      return;
-    }
-
-    const newUser = {
-      id: Date.now(),
-      name,
-      email,
-      password
-    };
-
-    users.push(newUser);
-
-    localStorage.setItem(
-      "goddenUsers",
-      JSON.stringify(users)
-    );
-
-    currentUser = {
-      id: newUser.id,
-      name: newUser.name,
-      email: newUser.email
-    };
-
-    saveUser();
-
-    showToast("Account created successfully!");
-
-    setTimeout(() => {
-      showStore();
-    }, 700);
-
-  });
+  goLogin.addEventListener(
+    "click",
+    showLogin
+  );
 
 
-  loginForm.addEventListener("submit", function (event) {
+  loginForm.addEventListener(
+    "submit",
+    function(event) {
 
-    event.preventDefault();
+      event.preventDefault();
 
-    const email =
-      document.getElementById("loginEmail").value.trim().toLowerCase();
+      const email =
+        document.getElementById("loginEmail")
+          .value
+          .trim()
+          .toLowerCase();
 
-    const password =
-      document.getElementById("loginPassword").value;
+      const password =
+        document.getElementById("loginPassword")
+          .value;
 
-    const users =
-      JSON.parse(localStorage.getItem("goddenUsers")) || [];
 
-    const user =
-      users.find(
-        item =>
-          item.email === email &&
-          item.password === password
+      const users = getUsers();
+
+      const user =
+        users.find(
+          item =>
+            item.email === email &&
+            item.password === password
+        );
+
+
+      if (!user) {
+
+        showToast(
+          "Incorrect email or password."
+        );
+
+        return;
+
+      }
+
+
+      currentUser = {
+        name: user.name,
+        email: user.email
+      };
+
+      saveCurrentUser();
+
+      showToast(
+        "Welcome back, " + user.name + "!"
       );
 
-    if (!user) {
-      showToast("Incorrect email or password.");
-      return;
-    }
-
-    currentUser = {
-      id: user.id,
-      name: user.name,
-      email: user.email
-    };
-
-    saveUser();
-
-    showToast("Welcome back!");
-
-    setTimeout(() => {
       showStore();
-    }, 500);
 
-  });
+    }
+  );
+
+
+  registerForm.addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+
+      const name =
+        document.getElementById("registerName")
+          .value
+          .trim();
+
+      const email =
+        document.getElementById("registerEmail")
+          .value
+          .trim()
+          .toLowerCase();
+
+      const password =
+        document.getElementById("registerPassword")
+          .value;
+
+      const confirm =
+        document.getElementById("registerConfirm")
+          .value;
+
+
+      if (password.length < 6) {
+
+        showToast(
+          "Password must be at least 6 characters."
+        );
+
+        return;
+
+      }
+
+
+      if (password !== confirm) {
+
+        showToast(
+          "Passwords do not match."
+        );
+
+        return;
+
+      }
+
+
+      const users = getUsers();
+
+
+      if (
+        users.some(
+          user => user.email === email
+        )
+      ) {
+
+        showToast(
+          "An account with this email already exists."
+        );
+
+        return;
+
+      }
+
+
+      const newUser = {
+        name,
+        email,
+        password
+      };
+
+
+      users.push(newUser);
+
+      saveUsers(users);
+
+
+      currentUser = {
+        name,
+        email
+      };
+
+      saveCurrentUser();
+
+
+      registerForm.reset();
+
+      showToast(
+        "Account created successfully!"
+      );
+
+      setTimeout(
+        showStore,
+        500
+      );
+
+    }
+  );
 
 }
 
 
-/* =====================================================
-   SHOW STORE
-===================================================== */
+/* =========================================================
+   STORE
+========================================================= */
 
 function showStore() {
 
-  const authPage = document.getElementById("authPage");
-  const store = document.getElementById("store");
+  document
+    .getElementById("authPage")
+    .classList.add("hidden");
 
-  if (authPage) {
-    authPage.classList.add("hidden");
-  }
+  document
+    .getElementById("storePage")
+    .classList.remove("hidden");
 
-  if (store) {
-    store.classList.remove("hidden");
-  }
 
   updateUserUI();
+
+  renderDeals();
+
   renderProducts();
-  renderFlashDeals();
-  updateCart();
+
+  updateCartUI();
 
 }
 
-
-/* =====================================================
-   USER UI
-===================================================== */
 
 function updateUserUI() {
 
   if (!currentUser) return;
 
-  const headerName =
-    document.getElementById("headerName");
-
-  const accountName =
+  const name =
     document.getElementById("accountName");
 
-  const accountEmail =
+  const email =
     document.getElementById("accountEmail");
 
-  if (headerName) {
-    headerName.textContent =
-      currentUser.name.split(" ")[0];
-  }
-
-  if (accountName) {
-    accountName.textContent =
+  if (name) {
+    name.textContent =
       currentUser.name;
   }
 
-  if (accountEmail) {
-    accountEmail.textContent =
+  if (email) {
+    email.textContent =
       currentUser.email;
   }
 
 }
 
 
-/* =====================================================
-   LOGOUT
-===================================================== */
-
 function logout() {
 
   currentUser = null;
 
-  localStorage.removeItem("goddenCurrentUser");
+  localStorage.removeItem(
+    "goddenCurrentUser"
+  );
 
-  location.reload();
+  closeAllPanels();
+
+  document
+    .getElementById("storePage")
+    .classList.add("hidden");
+
+  document
+    .getElementById("authPage")
+    .classList.remove("hidden");
+
+  showToast(
+    "You have been logged out."
+  );
 
 }
 
 
-/* =====================================================
+/* =========================================================
    PRODUCTS
-===================================================== */
+========================================================= */
 
-function renderProducts() {
+function getFilteredProducts() {
 
-  const grid =
-    document.getElementById("productGrid");
+  return products.filter(product => {
 
-  if (!grid) return;
+    const categoryMatch =
+      currentCategory === "All" ||
+      product.category === currentCategory;
 
-  let list = [...products];
 
-  if (activeCategory !== "all") {
+    const searchMatch =
+      product.name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
 
-    if (activeCategory === "deals") {
-      list =
-        list.filter(product => product.deal);
-    } else {
-      list =
-        list.filter(
-          product =>
-            product.category === activeCategory
-        );
-    }
+      product.category
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
 
-  }
 
-  const searchInput =
-    document.getElementById("searchInput");
-
-  const search =
-    searchInput
-      ? searchInput.value.trim().toLowerCase()
-      : "";
-
-  if (search) {
-    list =
-      list.filter(product =>
-        product.name.toLowerCase().includes(search)
-      );
-  }
-
-  list =
-    list.slice(0, visibleProducts);
-
-  grid.innerHTML = "";
-
-  if (!list.length) {
-
-    grid.innerHTML = `
-      <div class="empty-state">
-        <h3>No products found</h3>
-        <p>Try another search or category.</p>
-      </div>
-    `;
-
-    return;
-  }
-
-  list.forEach(product => {
-
-    grid.insertAdjacentHTML(
-      "beforeend",
-      productCard(product)
-    );
+    return categoryMatch && searchMatch;
 
   });
 
 }
 
 
-/* =====================================================
-   PRODUCT CARD
-===================================================== */
+function renderProductCard(product) {
 
-function productCard(product) {
+  const card =
+    document.createElement("article");
 
-  const discount =
-    Math.round(
-      ((product.oldPrice - product.price) /
-        product.oldPrice) * 100
-    );
+  card.className =
+    "product-card";
 
-  return `
-    <article class="product-card">
 
-      <div
-        class="product-image"
-        onclick="openProduct(${product.id})"
-      >
+  card.innerHTML = `
 
-        ${
-          product.deal
-            ? `<span class="deal-badge">-${discount}%</span>`
-            : ""
-        }
+    <div class="product-image">
 
-        <span class="product-emoji">
-          ${product.emoji}
+      ${
+        product.deal
+          ? `<span class="deal-badge">FLASH DEAL</span>`
+          : ""
+      }
+
+      <span>${product.icon}</span>
+
+    </div>
+
+    <div class="product-info">
+
+      <span class="product-category">
+        ${product.category}
+      </span>
+
+      <h3 class="product-name">
+        ${product.name}
+      </h3>
+
+      <div class="rating">
+        ⭐ ${product.rating}
+      </div>
+
+      <div class="product-price">
+
+        <span class="current-price">
+          ${money(product.price)}
         </span>
 
+        <span class="old-price">
+          ${money(product.oldPrice)}
+        </span>
+
+      </div>
+
+      <div class="product-buttons">
+
         <button
-          class="quick-view"
-          onclick="event.stopPropagation(); openProduct(${product.id})"
+          class="quick-btn"
+          data-id="${product.id}"
+          type="button"
         >
           View
         </button>
 
-      </div>
-
-      <div class="product-info">
-
-        <span class="product-category">
-          ${product.category}
-        </span>
-
-        <h3>
-          ${product.name}
-        </h3>
-
-        <div class="rating">
-          ⭐ ${product.rating}
-        </div>
-
-        <div class="price-row">
-
-          <strong>
-            ${money(product.price)}
-          </strong>
-
-          <del>
-            ${money(product.oldPrice)}
-          </del>
-
-        </div>
-
         <button
-          class="add-cart-btn"
-          onclick="addToCart(${product.id})"
-        >
-          Add to Cart
-        </button>
-
-      </div>
-
-    </article>
-  `;
-}
-
-
-/* =====================================================
-   FLASH DEALS
-===================================================== */
-
-function renderFlashDeals() {
-
-  const grid =
-    document.getElementById("flashGrid");
-
-  if (!grid) return;
-
-  const deals =
-    products
-      .filter(product => product.deal)
-      .slice(0, 6);
-
-  grid.innerHTML =
-    deals.map(product => productCard(product)).join("");
-
-}
-
-
-/* =====================================================
-   FILTER
-===================================================== */
-
-function filterProducts(category) {
-
-  activeCategory = category;
-  visibleProducts = 12;
-
-  document
-    .querySelectorAll(".filter-btn")
-    .forEach(button =>
-      button.classList.remove("active")
-    );
-
-  renderProducts();
-
-  const productsSection =
-    document.getElementById("products");
-
-  if (productsSection) {
-    productsSection.scrollIntoView({
-      behavior: "smooth"
-    });
-  }
-
-}
-
-
-/* =====================================================
-   SEARCH
-===================================================== */
-
-function searchProducts() {
-  visibleProducts = 12;
-  renderProducts();
-}
-
-function loadMoreProducts() {
-
-  visibleProducts += 12;
-
-  renderProducts();
-
-}
-
-
-/* =====================================================
-   CART
-===================================================== */
-
-function addToCart(productId) {
-
-  const product =
-    products.find(item => item.id === productId);
-
-  if (!product) return;
-
-  const existing =
-    cart.find(item => item.id === productId);
-
-  if (existing) {
-    existing.quantity += 1;
-  } else {
-    cart.push({
-      ...product,
-      quantity: 1
-    });
-  }
-
-  saveCart();
-  updateCart();
-
-  showToast(`${product.name} added to cart.`);
-
-}
-
-
-function updateCart() {
-
-  const count =
-    document.getElementById("cartCount");
-
-  const items =
-    document.getElementById("cartItems");
-
-  const totalElement =
-    document.getElementById("cartTotal");
-
-  const totalItems =
-    cart.reduce(
-      (sum, item) =>
-        sum + item.quantity,
-      0
-    );
-
-  const totalPrice =
-    cart.reduce(
-      (sum, item) =>
-        sum + item.price * item.quantity,
-      0
-    );
-
-  if (count) {
-    count.textContent = totalItems;
-  }
-
-  if (totalElement) {
-    totalElement.textContent =
-      money(totalPrice);
-  }
-
-  if (!items) return;
-
-  if (!cart.length) {
-
-    items.innerHTML = `
-      <div class="empty-state">
-        <div style="font-size:50px">🛒</div>
-        <h3>Your cart is empty</h3>
-        <p>Add some products to get started.</p>
-      </div>
-    `;
-
-    return;
-  }
-
-  items.innerHTML =
-    cart.map(item => `
-
-      <div class="cart-item">
-
-        <div class="cart-item-image">
-          ${item.emoji}
-        </div>
-
-        <div class="cart-item-info">
-
-          <h3>
-            ${item.name}
-          </h3>
-
-          <strong>
-            ${money(item.price)}
-          </strong>
-
-          <div class="quantity-controls">
-
-            <button
-              onclick="changeQuantity(${item.id}, -1)"
-            >
-              −
-            </button>
-
-            <span>
-              ${item.quantity}
-            </span>
-
-            <button
-              onclick="changeQuantity(${item.id}, 1)"
-            >
-              +
-            </button>
-
-            <button
-              onclick="removeFromCart(${item.id})"
-            >
-              🗑️
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    `).join("");
-
-}
-
-
-function changeQuantity(productId, amount) {
-
-  const item =
-    cart.find(product => product.id === productId);
-
-  if (!item) return;
-
-  item.quantity += amount;
-
-  if (item.quantity <= 0) {
-    cart =
-      cart.filter(product => product.id !== productId);
-  }
-
-  saveCart();
-  updateCart();
-
-}
-
-
-function removeFromCart(productId) {
-
-  cart =
-    cart.filter(product => product.id !== productId);
-
-  saveCart();
-  updateCart();
-
-}
-
-
-/* =====================================================
-   CART DRAWER
-===================================================== */
-
-function openCart() {
-
-  document
-    .getElementById("cartOverlay")
-    ?.classList.remove("hidden");
-
-  document
-    .getElementById("cartDrawer")
-    ?.classList.add("open");
-
-  updateCart();
-
-}
-
-
-function closeCart() {
-
-  document
-    .getElementById("cartOverlay")
-    ?.classList.add("hidden");
-
-  document
-    .getElementById("cartDrawer")
-    ?.classList.remove("open");
-
-}
-
-
-/* =====================================================
-   ACCOUNT
-===================================================== */
-
-function openAccount() {
-
-  document
-    .getElementById("accountOverlay")
-    ?.classList.remove("hidden");
-
-  document
-    .getElementById("accountDrawer")
-    ?.classList.add("open");
-
-  updateUserUI();
-
-}
-
-
-function closeAccount() {
-
-  document
-    .getElementById("accountOverlay")
-    ?.classList.add("hidden");
-
-  document
-    .getElementById("accountDrawer")
-    ?.classList.remove("open");
-
-}
-
-
-/* =====================================================
-   ORDERS
-===================================================== */
-
-function openOrders() {
-
-  closeAccount();
-
-  document
-    .getElementById("ordersOverlay")
-    ?.classList.remove("hidden");
-
-  document
-    .getElementById("ordersDrawer")
-    ?.classList.add("open");
-
-  loadOrders();
-
-}
-
-
-function closeOrders() {
-
-  document
-    .getElementById("ordersOverlay")
-    ?.classList.add("hidden");
-
-  document
-    .getElementById("ordersDrawer")
-    ?.classList.remove("open");
-
-}
-
-
-function loadOrders() {
-
-  const body =
-    document.getElementById("ordersBody");
-
-  if (!body) return;
-
-  if (!orders.length) {
-
-    body.innerHTML = `
-      <div class="empty-state">
-        <div style="font-size:50px">📦</div>
-        <h3>No orders yet</h3>
-        <p>Your completed orders will appear here.</p>
-      </div>
-    `;
-
-    return;
-  }
-
-  body.innerHTML =
-    orders.map(order => `
-
-      <div class="order-card">
-
-        <strong>
-          Order #${order.id}
-        </strong>
-
-        <span>
-          ${order.date}
-        </span>
-
-        <b>
-          ${money(order.total)}
-        </b>
-
-      </div>
-
-    `).join("");
-
-}
-
-
-/* =====================================================
-   PRODUCT MODAL
-===================================================== */
-
-function openProduct(productId) {
-
-  const product =
-    products.find(item => item.id === productId);
-
-  if (!product) return;
-
-  const modal =
-    document.getElementById("productModal");
-
-  const details =
-    document.getElementById("productDetails");
-
-  if (!modal || !details) return;
-
-  details.innerHTML = `
-
-    <div class="product-detail">
-
-      <div class="product-detail-image">
-        ${product.emoji}
-      </div>
-
-      <div class="product-detail-info">
-
-        <span>
-          ${product.category}
-        </span>
-
-        <h2>
-          ${product.name}
-        </h2>
-
-        <div class="rating">
-          ⭐ ${product.rating}
-        </div>
-
-        <div class="detail-price">
-          ${money(product.price)}
-        </div>
-
-        <p>
-          Premium ${product.name} available from
-          GODDEN TECH GLOBAL.
-        </p>
-
-        <button
-          class="primary-btn"
-          onclick="addToCart(${product.id}); closeProductModal();"
+          class="add-btn"
+          data-id="${product.id}"
+          type="button"
         >
           Add to Cart
         </button>
@@ -1118,95 +795,996 @@ function openProduct(productId) {
 
   `;
 
-  modal.classList.remove("hidden");
+
+  card
+    .querySelector(".quick-btn")
+    .addEventListener(
+      "click",
+      () => openProduct(product.id)
+    );
+
+
+  card
+    .querySelector(".add-btn")
+    .addEventListener(
+      "click",
+      () => addToCart(product.id)
+    );
+
+
+  return card;
 
 }
 
 
-function closeProductModal() {
+function renderProducts() {
 
-  document
-    .getElementById("productModal")
-    ?.classList.add("hidden");
+  const grid =
+    document.getElementById(
+      "productsGrid"
+    );
 
-}
+  if (!grid) return;
 
-/* =====================================================
-   CHECKOUT
-===================================================== */
 
-function checkout() {
+  grid.innerHTML = "";
 
-  if (!cart.length) {
-    showToast("Your cart is empty.");
-    return;
+
+  const filtered =
+    getFilteredProducts();
+
+
+  const visible =
+    filtered.slice(
+      0,
+      productsShown
+    );
+
+
+  visible.forEach(product => {
+
+    grid.appendChild(
+      renderProductCard(product)
+    );
+
+  });
+
+
+  const title =
+    document.getElementById(
+      "productsTitle"
+    );
+
+  if (title) {
+
+    if (searchTerm) {
+
+      title.textContent =
+        `Search results for "${searchTerm}"`;
+
+    } else if (
+      currentCategory !== "All"
+    ) {
+
+      title.textContent =
+        currentCategory;
+
+    } else {
+
+      title.textContent =
+        "Popular Products";
+
+    }
+
   }
 
-  const total = cart.reduce(
-    (sum, item) => sum + (item.price * item.quantity),
+
+  const clearButton =
+    document.getElementById(
+      "clearFilterButton"
+    );
+
+
+  if (
+    clearButton &&
+    (
+      currentCategory !== "All" ||
+      searchTerm
+    )
+  ) {
+
+    clearButton.classList.remove(
+      "hidden"
+    );
+
+  } else if (clearButton) {
+
+    clearButton.classList.add(
+      "hidden"
+    );
+
+  }
+
+
+  const loadMore =
+    document.getElementById(
+      "loadMoreButton"
+    );
+
+
+  if (loadMore) {
+
+    if (
+      visible.length >=
+      filtered.length
+    ) {
+
+      loadMore.classList.add(
+        "hidden"
+      );
+
+    } else {
+
+      loadMore.classList.remove(
+        "hidden"
+      );
+
+    }
+
+  }
+
+}
+
+
+function renderDeals() {
+
+  const grid =
+    document.getElementById(
+      "dealsGrid"
+    );
+
+  if (!grid) return;
+
+
+  grid.innerHTML = "";
+
+
+  products
+    .filter(product => product.deal)
+    .slice(0, 4)
+    .forEach(product => {
+
+      grid.appendChild(
+        renderProductCard(product)
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   CATEGORY
+========================================================= */
+
+function selectCategory(category) {
+
+  currentCategory = category;
+
+  searchTerm = "";
+
+  productsShown = 12;
+
+
+  document
+    .querySelectorAll(".category-btn")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.category === category
+      );
+
+    });
+
+
+  renderProducts();
+
+
+  document
+    .getElementById(
+      "productsSection"
+    )
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+
+}
+
+
+function setupCategories() {
+
+  document
+    .querySelectorAll(
+      "[data-category]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        function() {
+
+          selectCategory(
+            this.dataset.category
+          );
+
+        }
+      );
+
+    });
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function setupSearch() {
+
+  const input =
+    document.getElementById(
+      "searchInput"
+    );
+
+  const button =
+    document.getElementById(
+      "searchButton"
+    );
+
+
+  function search() {
+
+    searchTerm =
+      input.value.trim();
+
+    currentCategory = "All";
+
+    productsShown = 12;
+
+    renderProducts();
+
+    document
+      .getElementById(
+        "productsSection"
+      )
+      .scrollIntoView({
+        behavior: "smooth"
+      });
+
+  }
+
+
+  button.addEventListener(
+    "click",
+    search
+  );
+
+
+  input.addEventListener(
+    "keydown",
+    event => {
+
+      if (
+        event.key === "Enter"
+      ) {
+
+        search();
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+function addToCart(productId) {
+
+  const product =
+    products.find(
+      item => item.id === productId
+    );
+
+
+  if (!product) return;
+
+
+  const existing =
+    cart.find(
+      item => item.id === productId
+    );
+
+
+  if (existing) {
+
+    existing.quantity += 1;
+
+  } else {
+
+    cart.push({
+      ...product,
+      quantity: 1
+    });
+
+  }
+
+
+  saveCart();
+
+  updateCartUI();
+
+  showToast(
+    `${product.name} added to cart.`
+  );
+
+}
+
+
+function changeQuantity(
+  productId,
+  change
+) {
+
+  const item =
+    cart.find(
+      product => product.id === productId
+    );
+
+
+  if (!item) return;
+
+
+  item.quantity += change;
+
+
+  if (item.quantity <= 0) {
+
+    cart =
+      cart.filter(
+        product => product.id !== productId
+      );
+
+  }
+
+
+  saveCart();
+
+  updateCartUI();
+
+}
+
+
+function removeFromCart(productId) {
+
+  cart =
+    cart.filter(
+      item => item.id !== productId
+    );
+
+
+  saveCart();
+
+  updateCartUI();
+
+}
+
+
+function getCartTotal() {
+
+  return cart.reduce(
+    (total, item) =>
+      total +
+      item.price *
+      item.quantity,
     0
   );
 
-  const order = {
-    id: Date.now(),
-    date: new Date().toLocaleString(),
-    total: total,
-    items: cart.map(item => ({
-      name: item.name,
-      quantity: item.quantity,
-      price: item.price
-    }))
-  };
-
-  orders.unshift(order);
-  saveOrders();
-
-  const message =
-    `Hello GODDEN TECH GLOBAL.%0A%0A` +
-    `I want to place an order:%0A%0A` +
-    cart.map(item =>
-      `${item.name} x${item.quantity} - ${money(item.price * item.quantity)}`
-    ).join("%0A") +
-    `%0A%0ATotal: ${money(total)}`;
-
-  window.open(
-    `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`,
-    "_blank"
-  );
-
-  cart = [];
-  saveCart();
-  updateCart();
-
-  closeCart();
-
-  showToast("Order created successfully!");
 }
 
 
-/* =====================================================
-   APP DOWNLOAD
-===================================================== */
+function getCartCount() {
 
-function downloadApp() {
+  return cart.reduce(
+    (total, item) =>
+      total + item.quantity,
+    0
+  );
 
-  if (APP_URL && APP_URL !== "#") {
+}
 
-    window.open(APP_URL, "_blank");
+
+function updateCartUI() {
+
+  const count =
+    document.getElementById(
+      "cartCount"
+    );
+
+  const items =
+    document.getElementById(
+      "cartItems"
+    );
+
+  const subtotal =
+    document.getElementById(
+      "cartSubtotal"
+    );
+
+
+  if (count) {
+
+    count.textContent =
+      getCartCount();
+
+  }
+
+
+  if (!items) return;
+
+
+  if (cart.length === 0) {
+
+    items.innerHTML = `
+
+      <div style="
+        text-align:center;
+        padding:60px 15px;
+        color:#777;
+      ">
+
+        <div style="font-size:55px;">
+          🛒
+        </div>
+
+        <h3 style="color:white;margin:15px 0 5px;">
+          Your cart is empty
+        </h3>
+
+        <p style="font-size:12px;">
+          Add products to your cart to see them here.
+        </p>
+
+      </div>
+
+    `;
+
+  } else {
+
+    items.innerHTML = "";
+
+
+    cart.forEach(item => {
+
+      const element =
+        document.createElement(
+          "div"
+        );
+
+      element.className =
+        "cart-item";
+
+
+      element.innerHTML = `
+
+        <div class="cart-item-image">
+          ${item.icon}
+        </div>
+
+        <div class="cart-item-info">
+
+          <h3>${item.name}</h3>
+
+          <p>${money(item.price)}</p>
+
+          <div class="quantity-controls">
+
+            <button
+              data-minus="${item.id}"
+              type="button"
+            >
+              −
+            </button>
+
+            <span>
+              ${item.quantity}
+            </span>
+
+            <button
+              data-plus="${item.id}"
+              type="button"
+            >
+              +
+            </button>
+
+            <button
+              class="remove-item"
+              data-remove="${item.id}"
+              type="button"
+            >
+              Remove
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      element
+        .querySelector(
+          `[data-minus="${item.id}"]`
+        )
+        .addEventListener(
+          "click",
+          () =>
+            changeQuantity(
+              item.id,
+              -1
+            )
+        );
+
+
+      element
+        .querySelector(
+          `[data-plus="${item.id}"]`
+        )
+        .addEventListener(
+          "click",
+          () =>
+            changeQuantity(
+              item.id,
+              1
+            )
+        );
+
+
+      element
+        .querySelector(
+          `[data-remove="${item.id}"]`
+        )
+        .addEventListener(
+          "click",
+          () =>
+            removeFromCart(
+              item.id
+            )
+        );
+
+
+      items.appendChild(element);
+
+    });
+
+  }
+
+
+  if (subtotal) {
+
+    subtotal.textContent =
+      money(getCartTotal());
+
+  }
+
+}
+
+/* =========================================================
+   DRAWERS
+========================================================= */
+
+function openDrawer(id) {
+
+  closeAllPanels();
+
+  const drawer =
+    document.getElementById(id);
+
+  const overlay =
+    document.getElementById("overlay");
+
+  if (!drawer) return;
+
+  drawer.classList.add("open");
+
+  if (overlay) {
+    overlay.classList.add("open");
+  }
+}
+
+
+function closeDrawer(id) {
+
+  const drawer =
+    document.getElementById(id);
+
+  const overlay =
+    document.getElementById("overlay");
+
+  if (drawer) {
+    drawer.classList.remove("open");
+  }
+
+  if (overlay) {
+    overlay.classList.remove("open");
+  }
+}
+
+
+function closeAllPanels() {
+
+  document
+    .querySelectorAll(".drawer")
+    .forEach(drawer => {
+      drawer.classList.remove("open");
+    });
+
+  const overlay =
+    document.getElementById("overlay");
+
+  if (overlay) {
+    overlay.classList.remove("open");
+  }
+
+  const modal =
+    document.getElementById("productModal");
+
+  if (modal) {
+    modal.classList.remove("open");
+  }
+}
+
+
+/* =========================================================
+   PRODUCT MODAL
+========================================================= */
+
+function openProduct(productId) {
+
+  const product =
+    products.find(
+      item => item.id === productId
+    );
+
+  if (!product) return;
+
+  const modal =
+    document.getElementById("productModal");
+
+  const content =
+    document.getElementById(
+      "productModalContent"
+    );
+
+  if (!modal || !content) return;
+
+  content.innerHTML = `
+
+    <div class="modal-product">
+
+      <div class="modal-product-image">
+        ${product.icon}
+      </div>
+
+      <div class="modal-product-info">
+
+        <span class="product-category">
+          ${product.category}
+        </span>
+
+        <h2>${product.name}</h2>
+
+        <div class="rating">
+          ⭐ ${product.rating}
+        </div>
+
+        <div class="modal-price">
+          ${money(product.price)}
+        </div>
+
+        <p>
+          Premium ${product.category.toLowerCase()}
+          product available from GODDEN TECH GLOBAL.
+          Add it to your cart to continue shopping.
+        </p>
+
+        <button
+          id="modalAddButton"
+          class="primary-btn full-btn"
+          type="button"
+        >
+          🛒 Add to Cart
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+  modal.classList.add("open");
+
+  const addButton =
+    document.getElementById(
+      "modalAddButton"
+    );
+
+  if (addButton) {
+
+    addButton.addEventListener(
+      "click",
+      () => {
+
+        addToCart(product.id);
+
+        modal.classList.remove("open");
+
+      }
+    );
+
+  }
+}
+
+
+/* =========================================================
+   ORDERS
+========================================================= */
+
+function loadOrders() {
+
+  const content =
+    document.getElementById(
+      "ordersContent"
+    );
+
+  if (!content) return;
+
+  const userOrders =
+    orders.filter(
+      order =>
+        currentUser &&
+        order.email === currentUser.email
+    );
+
+
+  if (userOrders.length === 0) {
+
+    content.innerHTML = `
+
+      <div style="
+        text-align:center;
+        padding:60px 15px;
+        color:#777;
+      ">
+
+        <div style="font-size:50px;">
+          📦
+        </div>
+
+        <h3 style="
+          color:white;
+          margin:15px 0 5px;
+        ">
+          No orders yet
+        </h3>
+
+        <p style="font-size:12px;">
+          Your completed orders will appear here.
+        </p>
+
+      </div>
+
+    `;
 
     return;
   }
+
+
+  content.innerHTML = "";
+
+
+  userOrders
+    .slice()
+    .reverse()
+    .forEach(order => {
+
+      const card =
+        document.createElement("div");
+
+      card.className =
+        "order-card";
+
+
+      card.innerHTML = `
+
+        <h3>
+          Order #${order.id}
+        </h3>
+
+        <p>
+          ${new Date(
+            order.date
+          ).toLocaleString()}
+        </p>
+
+        <p>
+          ${order.items.length}
+          product item(s)
+        </p>
+
+        <p class="order-total">
+          Total: ${money(order.total)}
+        </p>
+
+      `;
+
+      content.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================================
+   CHECKOUT
+========================================================= */
+
+function checkout() {
+
+  if (!currentUser) {
+
+    showToast(
+      "Please login before checkout."
+    );
+
+    return;
+  }
+
+
+  if (cart.length === 0) {
+
+    showToast(
+      "Your cart is empty."
+    );
+
+    return;
+  }
+
+
+  const order = {
+
+    id:
+      "GT" +
+      Date.now()
+        .toString()
+        .slice(-8),
+
+    email:
+      currentUser.email,
+
+    name:
+      currentUser.name,
+
+    items:
+      cart.map(item => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity
+      })),
+
+    total:
+      getCartTotal(),
+
+    date:
+      new Date().toISOString()
+
+  };
+
+
+  orders.push(order);
+
+  saveOrders();
+
+
+  let message =
+    `Hello GODDEN TECH GLOBAL!\n\n` +
+    `New Order: ${order.id}\n` +
+    `Customer: ${order.name}\n` +
+    `Email: ${order.email}\n\n`;
+
+
+  cart.forEach(item => {
+
+    message +=
+      `${item.name} x${item.quantity} - ` +
+      `${money(
+        item.price * item.quantity
+      )}\n`;
+
+  });
+
+
+  message +=
+    `\nTotal: ${money(order.total)}`;
+
+
+  const whatsappURL =
+    `https://wa.me/${WHATSAPP_NUMBER}?text=` +
+    encodeURIComponent(message);
+
+
+  cart = [];
+
+  saveCart();
+
+  updateCartUI();
+
+  loadOrders();
+
+  closeAllPanels();
+
+
+  window.open(
+    whatsappURL,
+    "_blank"
+  );
+
+
+  showToast(
+    "Order created. WhatsApp is opening..."
+  );
+
+}
+
+
+/* =========================================================
+   APP DOWNLOAD
+========================================================= */
+
+function downloadApp() {
+
+  if (
+    APP_URL &&
+    APP_URL !== "#"
+  ) {
+
+    window.open(
+      APP_URL,
+      "_blank"
+    );
+
+    return;
+  }
+
 
   showToast(
     "The GODDEN TECH app will be available soon."
   );
+
 }
 
 
 function closeAppPopup() {
 
   const popup =
-    document.getElementById("appPopup");
+    document.getElementById(
+      "appPopup"
+    );
 
   if (popup) {
     popup.classList.add("hidden");
@@ -1215,154 +1793,671 @@ function closeAppPopup() {
 }
 
 
-/* =====================================================
-   SUPPORT
-===================================================== */
+/* =========================================================
+   CUSTOMER SUPPORT
+========================================================= */
 
 function contactSupport() {
 
   const message =
-    "Hello GODDEN TECH GLOBAL, I need help.";
+    "Hello GODDEN TECH GLOBAL, I need help with my order.";
+
+  const url =
+    `https://wa.me/${WHATSAPP_NUMBER}` +
+    `?text=${encodeURIComponent(message)}`;
+
 
   window.open(
-    `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,
+    url,
     "_blank"
   );
 
 }
 
 
-/* =====================================================
-   MOBILE MENU
-===================================================== */
-
-function toggleMenu() {
-
-  const nav =
-    document.querySelector(".category-nav");
-
-  if (!nav) return;
-
-  nav.classList.toggle("mobile-open");
-
-}
-
-
-/* =====================================================
+/* =========================================================
    COUNTDOWN
-===================================================== */
+========================================================= */
 
-let dealEnd =
-  Date.now() + (24 * 60 * 60 * 1000);
+let dealSeconds =
+  24 * 60 * 60;
 
 
 function updateCountdown() {
 
-  let difference =
-    dealEnd - Date.now();
+  const countdown =
+    document.getElementById(
+      "countdown"
+    );
 
-  if (difference <= 0) {
+  if (!countdown) return;
 
-    dealEnd =
-      Date.now() + (24 * 60 * 60 * 1000);
-
-    difference =
-      dealEnd - Date.now();
-  }
 
   const hours =
     Math.floor(
-      difference / (1000 * 60 * 60)
+      dealSeconds / 3600
     );
 
   const minutes =
     Math.floor(
-      (difference / (1000 * 60)) % 60
+      (dealSeconds % 3600) / 60
     );
 
   const seconds =
-    Math.floor(
-      (difference / 1000) % 60
+    dealSeconds % 60;
+
+
+  countdown.textContent =
+    `${String(hours).padStart(2, "0")}:` +
+    `${String(minutes).padStart(2, "0")}:` +
+    `${String(seconds).padStart(2, "0")}`;
+
+
+  dealSeconds--;
+
+
+  if (dealSeconds < 0) {
+
+    dealSeconds =
+      24 * 60 * 60;
+
+  }
+
+}
+
+
+/* =========================================================
+   MAIN EVENTS
+========================================================= */
+
+function setupEvents() {
+
+  /* CART */
+
+  const cartButton =
+    document.getElementById(
+      "cartButton"
     );
 
-  const hoursElement =
-    document.getElementById("hours");
+  if (cartButton) {
 
-  const minutesElement =
-    document.getElementById("minutes");
+    cartButton.addEventListener(
+      "click",
+      () =>
+        openDrawer("cartDrawer")
+    );
 
-  const secondsElement =
-    document.getElementById("seconds");
-
-  if (hoursElement) {
-    hoursElement.textContent =
-      String(hours).padStart(2, "0");
   }
 
-  if (minutesElement) {
-    minutesElement.textContent =
-      String(minutes).padStart(2, "0");
+
+  const closeCartButton =
+    document.getElementById(
+      "closeCartButton"
+    );
+
+  if (closeCartButton) {
+
+    closeCartButton.addEventListener(
+      "click",
+      () =>
+        closeDrawer("cartDrawer")
+    );
+
   }
 
-  if (secondsElement) {
-    secondsElement.textContent =
-      String(seconds).padStart(2, "0");
+
+  const continueShoppingButton =
+    document.getElementById(
+      "continueShoppingButton"
+    );
+
+  if (continueShoppingButton) {
+
+    continueShoppingButton.addEventListener(
+      "click",
+      () =>
+        closeDrawer("cartDrawer")
+    );
+
+  }
+
+
+  const checkoutButton =
+    document.getElementById(
+      "checkoutButton"
+    );
+
+  if (checkoutButton) {
+
+    checkoutButton.addEventListener(
+      "click",
+      checkout
+    );
+
+  }
+
+
+  /* ACCOUNT */
+
+  const accountButton =
+    document.getElementById(
+      "accountButton"
+    );
+
+  if (accountButton) {
+
+    accountButton.addEventListener(
+      "click",
+      () =>
+        openDrawer("accountDrawer")
+    );
+
+  }
+
+
+  const closeAccountButton =
+    document.getElementById(
+      "closeAccountButton"
+    );
+
+  if (closeAccountButton) {
+
+    closeAccountButton.addEventListener(
+      "click",
+      () =>
+        closeDrawer("accountDrawer")
+    );
+
+  }
+
+
+  const logoutButton =
+    document.getElementById(
+      "logoutButton"
+    );
+
+  if (logoutButton) {
+
+    logoutButton.addEventListener(
+      "click",
+      logout
+    );
+
+  }
+
+
+  /* ORDERS */
+
+  const ordersButton =
+    document.getElementById(
+      "ordersButton"
+    );
+
+  if (ordersButton) {
+
+    ordersButton.addEventListener(
+      "click",
+      () => {
+
+        loadOrders();
+
+        openDrawer("ordersDrawer");
+
+      }
+    );
+
+  }
+
+
+  const closeOrdersButton =
+    document.getElementById(
+      "closeOrdersButton"
+    );
+
+  if (closeOrdersButton) {
+
+    closeOrdersButton.addEventListener(
+      "click",
+      () =>
+        closeDrawer("ordersDrawer")
+    );
+
+  }
+
+
+  const accountOrdersButton =
+    document.getElementById(
+      "accountOrdersButton"
+    );
+
+  if (accountOrdersButton) {
+
+    accountOrdersButton.addEventListener(
+      "click",
+      () => {
+
+        closeDrawer("accountDrawer");
+
+        loadOrders();
+
+        openDrawer("ordersDrawer");
+
+      }
+    );
+
+  }
+
+
+  /* OVERLAY */
+
+  const overlay =
+    document.getElementById(
+      "overlay"
+    );
+
+  if (overlay) {
+
+    overlay.addEventListener(
+      "click",
+      closeAllPanels
+    );
+
+  }
+
+
+  /* PRODUCT MODAL */
+
+  const closeProductModal =
+    document.getElementById(
+      "closeProductModal"
+    );
+
+  if (closeProductModal) {
+
+    closeProductModal.addEventListener(
+      "click",
+      () => {
+
+        document
+          .getElementById(
+            "productModal"
+          )
+          .classList.remove("open");
+
+      }
+    );
+
+  }
+
+
+  /* APP */
+
+  const downloadAppButton =
+    document.getElementById(
+      "downloadAppButton"
+    );
+
+  if (downloadAppButton) {
+
+    downloadAppButton.addEventListener(
+      "click",
+      downloadApp
+    );
+
+  }
+
+
+  const popupDownloadButton =
+    document.getElementById(
+      "popupDownloadButton"
+    );
+
+  if (popupDownloadButton) {
+
+    popupDownloadButton.addEventListener(
+      "click",
+      downloadApp
+    );
+
+  }
+
+
+  const closeAppPopupButton =
+    document.getElementById(
+      "closeAppPopup"
+    );
+
+  if (closeAppPopupButton) {
+
+    closeAppPopupButton.addEventListener(
+      "click",
+      closeAppPopup
+    );
+
+  }
+
+
+  /* SUPPORT */
+
+  const supportButton =
+    document.getElementById(
+      "supportButton"
+    );
+
+  if (supportButton) {
+
+    supportButton.addEventListener(
+      "click",
+      contactSupport
+    );
+
+  }
+
+
+  /* FOOTER ORDERS */
+
+  const footerOrders =
+    document.getElementById(
+      "footerOrders"
+    );
+
+  if (footerOrders) {
+
+    footerOrders.addEventListener(
+      "click",
+      () => {
+
+        loadOrders();
+
+        openDrawer("ordersDrawer");
+
+      }
+    );
+
+  }
+
+
+  /* FOOTER ACCOUNT */
+
+  const footerAccount =
+    document.getElementById(
+      "footerAccount"
+    );
+
+  if (footerAccount) {
+
+    footerAccount.addEventListener(
+      "click",
+      () =>
+        openDrawer("accountDrawer")
+    );
+
+  }
+
+
+  /* HERO SHOP BUTTON */
+
+  const shopNowButton =
+    document.getElementById(
+      "shopNowButton"
+    );
+
+  if (shopNowButton) {
+
+    shopNowButton.addEventListener(
+      "click",
+      () => {
+
+        document
+          .getElementById(
+            "productsSection"
+          )
+          .scrollIntoView({
+            behavior: "smooth"
+          });
+
+      }
+    );
+
+  }
+
+
+  /* HERO DEAL BUTTON */
+
+  const viewDealsButton =
+    document.getElementById(
+      "viewDealsButton"
+    );
+
+  if (viewDealsButton) {
+
+    viewDealsButton.addEventListener(
+      "click",
+      () => {
+
+        document
+          .getElementById(
+            "dealsSection"
+          )
+          .scrollIntoView({
+            behavior: "smooth"
+          });
+
+      }
+    );
+
+  }
+
+
+  /* LOAD MORE */
+
+  const loadMoreButton =
+    document.getElementById(
+      "loadMoreButton"
+    );
+
+  if (loadMoreButton) {
+
+    loadMoreButton.addEventListener(
+      "click",
+      () => {
+
+        productsShown += 8;
+
+        renderProducts();
+
+      }
+    );
+
+  }
+
+
+  /* CLEAR FILTER */
+
+  const clearFilterButton =
+    document.getElementById(
+      "clearFilterButton"
+    );
+
+  if (clearFilterButton) {
+
+    clearFilterButton.addEventListener(
+      "click",
+      () => {
+
+        currentCategory = "All";
+
+        searchTerm = "";
+
+        productsShown = 12;
+
+
+        const searchInput =
+          document.getElementById(
+            "searchInput"
+          );
+
+        if (searchInput) {
+          searchInput.value = "";
+        }
+
+
+        document
+          .querySelectorAll(
+            ".category-btn"
+          )
+          .forEach(button => {
+
+            button.classList.toggle(
+              "active",
+              button.dataset.category === "All"
+            );
+
+          });
+
+
+        renderProducts();
+
+      }
+    );
+
+  }
+
+
+  /* BRAND HOME */
+
+  const brandHome =
+    document.getElementById(
+      "brandHome"
+    );
+
+  if (brandHome) {
+
+    brandHome.addEventListener(
+      "click",
+      function(event) {
+
+        event.preventDefault();
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+
+      }
+    );
+
   }
 
 }
 
 
-/* =====================================================
-   SEARCH
-===================================================== */
+/* =========================================================
+   CATEGORY BUTTONS
+========================================================= */
 
-function setupSearch() {
+function setupCategories() {
 
-  const input =
-    document.getElementById("searchInput");
+  document
+    .querySelectorAll(
+      "[data-category]"
+    )
+    .forEach(button => {
 
-  if (!input) return;
+      button.addEventListener(
+        "click",
+        function() {
 
-  input.addEventListener("input", function () {
+          selectCategory(
+            this.dataset.category
+          );
 
-    visibleProducts = 12;
+        }
+      );
 
-    renderProducts();
+    });
 
-  });
+}
 
-  input.addEventListener("keydown", function(event) {
 
-    if (event.key === "Enter") {
-      searchProducts();
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+function setupMobileMenu() {
+
+  const button =
+    document.getElementById(
+      "mobileMenuButton"
+    );
+
+  const nav =
+    document.getElementById(
+      "categoryNav"
+    );
+
+
+  if (!button || !nav) return;
+
+
+  button.addEventListener(
+    "click",
+    () => {
+
+      nav.scrollIntoView({
+        behavior: "smooth"
+      });
+
     }
-
-  });
+  );
 
 }
 
 
-/* =====================================================
+/* =========================================================
    START APPLICATION
-===================================================== */
+========================================================= */
 
 document.addEventListener(
   "DOMContentLoaded",
   function() {
 
+    const year =
+      document.getElementById(
+        "year"
+      );
+
+    if (year) {
+
+      year.textContent =
+        new Date().getFullYear();
+
+    }
+
+
     setupAuth();
+
+    setupEvents();
+
+    setupCategories();
 
     setupSearch();
 
+    setupMobileMenu();
+
     updateCountdown();
+
 
     setInterval(
       updateCountdown,
       1000
     );
 
+
     if (currentUser) {
+
       showStore();
+
     }
 
   }
